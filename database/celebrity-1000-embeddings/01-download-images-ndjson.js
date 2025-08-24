@@ -1,4 +1,4 @@
-// "node app.js" -> will generate celebs.ndjson file and images folder
+// This file will generate celebs.ndjson file and images folder
 
 import fs from "fs";
 import path from "path";

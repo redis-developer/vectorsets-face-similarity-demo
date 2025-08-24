@@ -1,4 +1,3 @@
-// node vadd-create.js
 // Convert NDJSON -> Redis commands for Redis Vector Sets
 
 // Notes:

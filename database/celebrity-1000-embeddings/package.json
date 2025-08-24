@@ -7,12 +7,6 @@
         "start": "node vadd-run.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "keywords": [
-        "redis",
-        "vectors",
-        "vadd",
-        "face-similarity"
-    ],
     "author": "",
     "license": "ISC",
     "dependencies": {
