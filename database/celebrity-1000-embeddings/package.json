@@ -1,0 +1,24 @@
+{
+    "name": "redis-vadd-processor",
+    "version": "1.0.0",
+    "description": "Process Redis VADD commands from celebs.redis file",
+    "main": "vadd-run.js",
+    "scripts": {
+        "start": "node vadd-run.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "redis",
+        "vectors",
+        "vadd",
+        "face-similarity"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "redis": "^4.6.0"
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    }
+}
