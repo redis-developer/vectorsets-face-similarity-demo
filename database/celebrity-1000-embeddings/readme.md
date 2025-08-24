@@ -4,6 +4,6 @@
 
 ## Seed Data into Redis
 
-- upload `celebs.redis` via Redis Insight
+- upload `output/celebs.redis` via Redis Insight
   (or)
 - run `node 03-run-redis-file.js` to seed data

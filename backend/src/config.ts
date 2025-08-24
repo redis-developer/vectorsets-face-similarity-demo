@@ -1,0 +1,27 @@
+import "dotenv/config";
+
+const getConfig = () => {
+  return {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME || "gpt-4o", //"gpt-4o-mini"
+    REDIS_URL: process.env.REDIS_URL || "redis://localhost:6379",
+
+    // process.env.PORT can be dynamic vendor port
+    PORT: process.env.PORT || "3001",
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS, //comma separated list of allowed origins
+
+    REDIS_KEYS: {
+      VSET_CELEB: {
+        NAME: "vset:celeb",
+        DIM: 768,
+        ATTRIBUTES: {
+          label: "label",
+          imagePath: "imagePath",
+          charCount: "charCount",
+        },
+      },
+    },
+  };
+};
+
+export { getConfig };
