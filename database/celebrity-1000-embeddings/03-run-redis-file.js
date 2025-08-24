@@ -3,7 +3,8 @@ const { createClient } = require('redis');
 
 // Configuration
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
-const INPUT_FILE = 'celebs.redis';
+const OUTPUT_DIR = "output";
+const INPUT_FILE = path.join(__dirname, OUTPUT_DIR, "celebs.redis");
 const ERROR_LOG_FILE = 'error.log';
 
 // Statistics tracking

@@ -11,9 +11,10 @@ import readline from "readline";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const OUTPUT_DIR = "output";
 
-const INPUT = "celebs.ndjson";
-const OUTPUT = "celebs.redis";
+const INPUT = path.join(__dirname, OUTPUT_DIR, "celebs.ndjson");
+const OUTPUT = path.join(__dirname, OUTPUT_DIR, "celebs.redis");
 const VSET = "vset:celeb";
 const DIM = 768;
 const ADD_NOQUANT = false;

@@ -9,12 +9,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // CONFIG
+const OUTPUT_DIR = "output";
 const DATASET = "tonyassi/celebrity-1000-embeddings";
 const CONFIG = "default";
 const SPLIT = "train";
 const PAGE = 100; // API max
-const OUT_DIR = path.join(__dirname, "images");
-const OUT_NDJSON = path.join(__dirname, "celebs.ndjson");
+const OUT_DIR = path.join(__dirname, OUTPUT_DIR, "images");
+const OUT_NDJSON = path.join(__dirname, OUTPUT_DIR, "celebs.ndjson");
 
 // Rate limiting config
 const BASE_DELAY = 200; // ms between requests
