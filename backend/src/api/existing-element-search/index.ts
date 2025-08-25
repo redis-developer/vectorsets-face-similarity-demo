@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import * as InputSchemas from "../input-schema.js";
-import { RedisWrapperST } from "../utils/redis.js";
-import { getConfig } from "../config.js";
+import * as InputSchemas from "../../input-schema.js";
+import { RedisWrapperST } from "../../utils/redis.js";
+import { getConfig } from "../../config.js";
 
 const buildQuery = (
   input: z.infer<typeof InputSchemas.existingElementSearchInputSchema>

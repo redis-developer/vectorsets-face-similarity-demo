@@ -5,3 +5,9 @@ export const existingElementSearchInputSchema = z.object({
   count: z.number().min(1).max(50).optional().default(10),
   filterQuery: z.string().optional(),
 });
+
+export const newElementSearchInputSchema = z.object({
+  localImageUrl: z.string(),
+  count: z.number().min(1).max(50).optional().default(10),
+  filterQuery: z.string().optional(),
+});

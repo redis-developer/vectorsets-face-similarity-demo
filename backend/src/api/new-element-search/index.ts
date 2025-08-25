@@ -1,0 +1,38 @@
+import { z } from "zod";
+
+import * as InputSchemas from "../../input-schema.js";
+import { RedisWrapperST } from "../../utils/redis.js";
+import { getConfig } from "../../config.js";
+import { getImageEmbeddings } from "./image-embeddings.js";
+
+const buildQuery = async (
+  input: z.infer<typeof InputSchemas.newElementSearchInputSchema>
+) => {
+  const config = getConfig();
+  const keyPrefix = config.REDIS_KEYS.VSET_CELEB.NAME;
+  const DIM = config.REDIS_KEYS.VSET_CELEB.DIM;
+  let filterQuery = "";
+  if (input.filterQuery) {
+    filterQuery = `FILTER '${input.filterQuery}'`;
+  }
+  const imageEmbeddings = await getImageEmbeddings(input.localImageUrl);
+  const imageEmbeddingsStr = imageEmbeddings
+    .map((val) => val.toString())
+    .join(" ");
+  return `VSIM '${keyPrefix}' VALUES ${DIM} ${imageEmbeddingsStr} WITHSCORES WITHATTRIBS ${filterQuery} COUNT ${input.count}`;
+};
+
+const newElementSearch = async (
+  input: z.infer<typeof InputSchemas.newElementSearchInputSchema>
+) => {
+  const vInput = InputSchemas.newElementSearchInputSchema.parse(input); // validate input
+
+  const redisWrapperST = RedisWrapperST.getInstance();
+  let runQuery = await buildQuery(vInput);
+  const result = await redisWrapperST.rawCommandExecute(runQuery);
+  console.log(result);
+
+  return result;
+};
+
+export { newElementSearch };
