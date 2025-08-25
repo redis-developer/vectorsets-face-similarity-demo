@@ -1,0 +1,17 @@
+{
+  "name": "dataset2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "01-fetch.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "dotenv": "^17.2.1"
+  }
+}
