@@ -62,6 +62,7 @@ async function main() {
 
         let id = rec.id ?? count;
         id = id.replace(/^row:/, "");
+        id = "e" + (parseInt(id) + 1); // e for element
 
         const emb = rec.embeddings;
 

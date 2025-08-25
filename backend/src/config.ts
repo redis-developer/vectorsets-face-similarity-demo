@@ -14,11 +14,6 @@ const getConfig = () => {
       VSET_CELEB: {
         NAME: "vset:celeb",
         DIM: 768,
-        ATTRIBUTES: {
-          label: "label",
-          imagePath: "imagePath",
-          charCount: "charCount",
-        },
       },
     },
   };
