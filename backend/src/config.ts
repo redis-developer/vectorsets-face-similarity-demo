@@ -9,6 +9,8 @@ const getConfig = () => {
     // process.env.PORT can be dynamic vendor port
     PORT: process.env.PORT || "3001",
     ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS, //comma separated list of allowed origins
+    EMBED_PYTHON_URL:
+      process.env.EMBED_PYTHON_URL || "http://localhost:8009/embed",
 
     REDIS_KEYS: {
       VSET_CELEB: {
