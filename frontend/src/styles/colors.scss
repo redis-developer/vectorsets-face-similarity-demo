@@ -1,26 +1,32 @@
-// Color palette
-$primary-color: #007bff;
-$secondary-color: #6c757d;
-$success-color: #28a745;
-$danger-color: #dc3545;
-$warning-color: #ffc107;
-$info-color: #17a2b8;
+/* Core palette */
+$white: #ffffff;
+$black: #0b0f16;
 
-// Background colors
-$background-color: #ffffff;
-$sidebar-bg: #f8f9fa;
-$card-bg: #ffffff;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-700: #374151;
+$gray-900: #111827;
 
-// Text colors
-$text-color: #212529;
-$text-muted: #6c757d;
-$text-light: #ffffff;
+$blue-500: #2563eb;
+$green-500: #10b981;
+$red-500: #ef4444;
 
-// Border colors
-$border-color: #dee2e6;
-$border-light: #e9ecef;
+/* Semantic aliases */
+$bg: $gray-50;
+$panel: $white;
+$text: $gray-900;
+$muted: $gray-500;
+$border: $gray-200;
 
-// Shadow
-$shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-$shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-$shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+$primary: $blue-500;
+$success: $green-500;
+$error: $red-500;
+
+/* Shadows */
+$shadow-sm: 0 1px 2px rgba($black, 0.05);
+$shadow: 0 4px 16px rgba($black, 0.08);
+$shadow-lg: 0 8px 28px rgba($black, 0.12);

@@ -1,19 +1,21 @@
-// Layout variables
-$sidebar-width: 300px;
-$header-height: 80px;
-$border-radius: 8px;
-$spacing-xs: 4px;
-$spacing-sm: 8px;
-$spacing-md: 16px;
-$spacing-lg: 24px;
-$spacing-xl: 32px;
+/* Spacing scale */
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
 
-// Desktop breakpoints (web-only demo)
-$breakpoint-md: 768px;
-$breakpoint-lg: 992px;
-$breakpoint-xl: 1200px;
+/* Radii */
+$radius-8: 8px;
+$radius-12: 12px;
+$radius-16: 16px;
 
-// Z-index
-$z-index-dropdown: 1000;
-$z-index-modal: 2000;
-$z-index-tooltip: 3000;
+/* Z-index scale */
+$z-base: 1;
+$z-dropdown: 10;
+$z-sticky: 20;
+$z-modal: 40;
+$z-toast: 50;
