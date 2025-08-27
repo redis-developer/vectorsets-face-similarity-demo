@@ -22,7 +22,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: 120px;
   padding: 8px;
   transition: border-color 0.2s ease;
 
@@ -35,33 +34,33 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
   }
 
-  &--selected {
+  &.selected {
     border-color: #3b82f6;
     outline: none;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
   }
+}
 
-  &__thumbWrapper {
-    width: 100%;
-    height: 120px;
-    overflow: hidden;
-    border-radius: 8px;
-    background: #f9fafb;
-  }
+.thumbnailWrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f9fafb;
+  flex-shrink: 0;
+}
 
-  &__thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  &__label {
-    margin-top: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      sans-serif;
-    font-size: 14px;
-    color: #374151;
-    text-align: center;
-    word-break: break-word;
-  }
+.label {
+  margin-top: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: #374151;
+  text-align: center;
+  word-break: break-word;
+  flex-shrink: 0;
 }
