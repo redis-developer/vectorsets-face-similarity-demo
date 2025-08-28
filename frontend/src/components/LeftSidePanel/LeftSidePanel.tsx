@@ -15,8 +15,8 @@ type Props = {
 };
 
 const LEFT_SIDE_PANEL_WIDTH = 300;
-const IMG_WIDTH = 80;
-const IMG_HEIGHT = 80;
+const IMG_WIDTH = 100;
+const IMG_HEIGHT = 100;
 
 const LeftSidePanel: React.FC<Props> = ({
     width = LEFT_SIDE_PANEL_WIDTH,
