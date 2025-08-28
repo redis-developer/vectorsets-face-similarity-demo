@@ -4,6 +4,7 @@ import { HTTP_STATUS_CODES } from "./utils/constants.js";
 import { LoggerCls } from "./utils/logger.js";
 import { existingElementSearch } from "./api/existing-element-search/index.js";
 import { newElementSearch } from "./api/new-element-search/index.js";
+import { addImageUploadRoute } from "./upload.js";
 
 const router = express.Router();
 
@@ -60,5 +61,7 @@ router.post("/newElementSearch", async (req: Request, res: Response) => {
 
   res.send(result);
 });
+
+addImageUploadRoute(router);
 
 export { router };

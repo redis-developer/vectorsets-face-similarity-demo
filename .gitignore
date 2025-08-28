@@ -31,3 +31,5 @@ dist/
 temp/
 
 **/demo/
+
+**/uploads/

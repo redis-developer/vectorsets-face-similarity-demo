@@ -11,6 +11,8 @@ const getConfig = () => {
     ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS, //comma separated list of allowed origins
     EMBED_PYTHON_URL:
       process.env.EMBED_PYTHON_URL || "http://localhost:8009/embed",
+    UPLOAD_DIR: process.env.UPLOAD_DIR || "uploads",
+    UPLOAD_MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
 
     REDIS_KEYS: {
       VSET_CELEB: {
