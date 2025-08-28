@@ -1,3 +1,4 @@
+import type { DatasetNameType } from "../../config.js";
 import { z } from "zod";
 
 import * as InputSchemas from "../../input-schema.js";
@@ -10,8 +11,10 @@ const buildQuery = async (
   input: z.infer<typeof InputSchemas.newElementSearchInputSchema>
 ) => {
   const config = getConfig();
-  const keyPrefix = config.REDIS_KEYS.VSET_CELEB.NAME;
-  const DIM = config.REDIS_KEYS.VSET_CELEB.DIM;
+  const dataset = config.DATASETS[config.CURRENT_DATASET];
+
+  const keyPrefix = dataset.VECTOR_SET.KEY;
+  const DIM = dataset.VECTOR_SET.DIM;
   let filterQuery = "";
   if (input.filterQuery) {
     filterQuery = `FILTER '${input.filterQuery}'`;

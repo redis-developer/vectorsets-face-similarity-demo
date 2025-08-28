@@ -1,4 +1,29 @@
+import type { IDataset } from "./types.js";
 import "dotenv/config";
+
+const DATASET_NAMES = {
+  VSET_CELEB: "VSET_CELEB",
+  IMDB: "IMDB",
+} as const;
+
+type DatasetNameType = (typeof DATASET_NAMES)[keyof typeof DATASET_NAMES];
+
+const DATASETS: Record<DatasetNameType, IDataset> = {
+  VSET_CELEB: {
+    IMAGE_PREFIX: "/static/celebs/",
+    VECTOR_SET: {
+      KEY: "vset:celeb",
+      DIM: 768,
+    },
+  },
+  IMDB: {
+    IMAGE_PREFIX: "/static/imdb/",
+    VECTOR_SET: {
+      KEY: "vset:imdb",
+      DIM: 768,
+    },
+  },
+} as const;
 
 const getConfig = () => {
   return {
@@ -14,13 +39,11 @@ const getConfig = () => {
     UPLOAD_DIR: process.env.UPLOAD_DIR || "uploads",
     UPLOAD_MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
 
-    REDIS_KEYS: {
-      VSET_CELEB: {
-        NAME: "vset:celeb",
-        DIM: 768,
-      },
-    },
+    CURRENT_DATASET: DATASET_NAMES.VSET_CELEB as DatasetNameType,
+    DATASETS: DATASETS,
   };
 };
 
 export { getConfig };
+
+export type { DatasetNameType };

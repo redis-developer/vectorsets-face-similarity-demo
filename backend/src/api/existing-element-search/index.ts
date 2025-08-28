@@ -8,7 +8,9 @@ const buildQuery = (
   input: z.infer<typeof InputSchemas.existingElementSearchInputSchema>
 ) => {
   const config = getConfig();
-  const keyPrefix = config.REDIS_KEYS.VSET_CELEB.NAME;
+  const dataset = config.DATASETS[config.CURRENT_DATASET];
+
+  const keyPrefix = dataset.VECTOR_SET.KEY;
   let filterQuery = "";
   if (input.filterQuery) {
     filterQuery = `FILTER '${input.filterQuery}'`;
