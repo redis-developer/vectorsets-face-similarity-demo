@@ -1,19 +1,23 @@
 import { IApiResponse, IUploadResponse } from "@/types";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+import { API_BASE_URL } from "./config";
 
-// Generic API request function
-async function apiRequest<T>(
+const ENDPOINTS = {
+  IMAGE_UPLOAD: "/imageUpload",
+};
+
+const apiRequest = async <T>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<IApiResponse<T>> {
+): Promise<IApiResponse<T>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
+    if (!options.headers) {
+      options.headers = {
         "Content-Type": "application/json",
-        ...options.headers,
-      },
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
     });
 
@@ -30,21 +34,46 @@ async function apiRequest<T>(
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
-}
+};
 
-// Upload image
-// export async function uploadImage(
-//   file: File
-// ): Promise<IApiResponse<IUploadResponse>> {
-//   const formData = new FormData();
-//   formData.append("image", file);
+const apiPost = async <T>(
+  endpoint: string,
+  body: any
+): Promise<IApiResponse<T>> => {
+  const options: RequestInit = {
+    method: "POST",
+    body,
+  };
+  return apiRequest<T>(endpoint, options);
+};
 
-//   return apiRequest<IUploadResponse>("/upload", {
-//     method: "POST",
-//     body: formData,
-//     headers: {}, // Let browser set Content-Type for FormData
-//   });
-// }
+const apiImageUpload = async (
+  file: File
+): Promise<IApiResponse<IUploadResponse>> => {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Please select an image file.");
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const options: RequestInit = {
+    method: "POST",
+    body: formData,
+    headers: {}, // Let browser set Content-Type for FormData
+  };
+
+  const response = await apiRequest<IUploadResponse>(
+    ENDPOINTS.IMAGE_UPLOAD,
+    options
+  );
+
+  if (response?.data?.url) {
+    response.data.url = `${API_BASE_URL}${response.data.url}`;
+  }
+
+  return response;
+};
 
 // Search for similar faces
 // export async function searchSimilarFaces(
@@ -55,3 +84,5 @@ async function apiRequest<T>(
 //     body: JSON.stringify(request),
 //   });
 // }
+
+export { apiPost, apiImageUpload };

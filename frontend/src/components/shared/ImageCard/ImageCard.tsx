@@ -26,25 +26,25 @@ const ImageCard: React.FC<Props> = ({
             className={`${styles.imageCard} ${selected ? styles.selected : ""}`}
             onClick={handleClick}
             aria-pressed={selected}
-            aria-label={image.name ?? "Image card"}
+            aria-label={image.label ?? "Image card"}
             style={{ width: `${width}px` }}
         >
             <div
                 className={styles.thumbnailWrapper}
-                style={{ height: image.name ? `${height * 0.8}px` : `${height}px` }}
+                style={{ height: image.label ? `${height * 0.8}px` : `${height}px` }}
             >
                 <Image
                     src={image.src}
-                    alt={image.name ?? "Image preview"}
+                    alt={image.label ?? "Image preview"}
                     className={styles.thumbnail}
                     width={width}
-                    height={image.name ? height * 0.8 : height}
+                    height={image.label ? height * 0.8 : height}
                     style={{ objectFit: "cover" }}
                 />
             </div>
 
-            {image.name && (
-                <div className={styles.label}>{image.name}</div>
+            {image.label && (
+                <div className={styles.label}>{image.label}</div>
             )}
         </button>
     );
