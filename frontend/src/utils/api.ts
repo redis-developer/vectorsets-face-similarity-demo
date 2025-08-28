@@ -1,9 +1,10 @@
-import { IApiResponse, IUploadResponse } from "@/types";
+import { IApiResponse, IUploadResponse, IImageDoc } from "@/types";
 
 import { API_BASE_URL } from "./config";
 
 const ENDPOINTS = {
   IMAGE_UPLOAD: "/imageUpload",
+  GET_SAMPLE_IMAGES: "/getSampleImages",
 };
 
 const apiRequest = async <T>(
@@ -84,5 +85,10 @@ const apiImageUpload = async (
 //     body: JSON.stringify(request),
 //   });
 // }
+
+// Get available images for search filter
+export async function getSampleImages(): Promise<IApiResponse<IImageDoc[]>> {
+  return apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
+}
 
 export { apiPost, apiImageUpload };

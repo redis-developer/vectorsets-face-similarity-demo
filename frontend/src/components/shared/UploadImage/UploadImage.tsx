@@ -3,10 +3,10 @@
 import React, { useRef, useState } from "react";
 import styles from "./UploadImage.module.scss";
 import { apiImageUpload } from "@/utils/api";
-import type { ImageDoc } from "@/types";
+import type { IImageDoc } from "@/types";
 
 type Props = {
-    onUploaded?: (image: ImageDoc) => void; // parent can update the grid/selection
+    onUploaded?: (image: IImageDoc) => void; // parent can update the grid/selection
     fileSizeMax?: number;
     width?: number | string;
     maxWidth?: number | string;

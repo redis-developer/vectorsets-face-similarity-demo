@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import styles from "./ImageCard.module.scss";
-import type { ImageDoc } from "@/types";
+import type { IImageDoc } from "@/types";
 
 type Props = {
-    image: ImageDoc;
+    image: IImageDoc;
     selected?: boolean;
-    onSelect?: (img: ImageDoc) => void;
+    onSelect?: (img: IImageDoc) => void;
     width?: number;
     height?: number;
 };
