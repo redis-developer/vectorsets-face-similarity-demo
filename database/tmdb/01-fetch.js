@@ -209,7 +209,7 @@ async function handlePage(resp, out, alreadyWritten) {
 
         const rec = {
             id: `tmdb:${idx}`,
-            name: row.name || null,
+            label: row.name || null,
             imdb_id: row.imdb_id || null,
             department: row.known_for_department || null,
             place_of_birth: row.place_of_birth || null,
