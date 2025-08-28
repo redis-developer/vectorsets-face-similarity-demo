@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { RefreshCw } from 'lucide-react';
 import styles from './LeftSidePanel.module.scss';
 import UploadImage from '../shared/UploadImage/UploadImage';
 import ImageCard from '../shared/ImageCard/ImageCard';
@@ -27,6 +29,7 @@ const LeftSidePanel: React.FC<Props> = ({
     const [availableImages, setAvailableImages] = useState<IImageDoc[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -50,7 +53,7 @@ const LeftSidePanel: React.FC<Props> = ({
         };
 
         fetchImages();
-    }, []);
+    }, [refreshKey]);
 
     const handleImageUpload = (image: IImageDoc) => {
         setUploadedImage(image);
@@ -63,6 +66,10 @@ const LeftSidePanel: React.FC<Props> = ({
         if (onImageSelect) {
             onImageSelect(image);
         }
+    };
+
+    const handleRefresh = () => {
+        setRefreshKey(prev => prev + 1);
     };
 
     const panelStyle: React.CSSProperties = {
@@ -81,7 +88,21 @@ const LeftSidePanel: React.FC<Props> = ({
             </div>
 
             <div className={styles.labelSection}>
-                <h3 className={styles.label}>OR PICK A CARD</h3>
+                <div className={styles.labelContainer}>
+                    <h3 className={styles.label}>OR PICK A CARD</h3>
+                    <button
+                        className={styles.refreshButton}
+                        onClick={handleRefresh}
+                        disabled={loading}
+                        aria-label="Refresh images"
+                        title="Get new random images"
+                    >
+                        <RefreshCw
+                            size={16}
+                            className={`${styles.refreshIcon} ${loading ? styles.spinning : ''}`}
+                        />
+                    </button>
+                </div>
             </div>
 
             <div className={styles.imageCardsContainer}>

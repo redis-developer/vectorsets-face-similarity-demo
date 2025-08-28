@@ -1,3 +1,12 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .leftSidePanel {
   display: flex;
   flex-direction: column;
@@ -15,13 +24,53 @@
   .labelSection {
     margin-bottom: 12px;
 
+    .labelContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
     .label {
       font-size: 14px;
       font-weight: 600;
       color: #333;
       margin: 0;
-      text-align: center;
       letter-spacing: 0.5px;
+    }
+
+    .refreshButton {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      color: #666;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #e0e0e0;
+        color: #333;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
+
+    .refreshIcon {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      opacity: 0.8;
+      color: #666;
+
+      &.spinning {
+        animation: spin 1s linear infinite;
+      }
     }
   }
 
