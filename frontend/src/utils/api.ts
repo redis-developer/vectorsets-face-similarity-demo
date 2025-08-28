@@ -41,6 +41,9 @@ const apiPost = async <T>(
   endpoint: string,
   body: any
 ): Promise<IApiResponse<T>> => {
+  if (body) {
+    body = JSON.stringify(body);
+  }
   const options: RequestInit = {
     method: "POST",
     body,
@@ -88,7 +91,20 @@ const apiImageUpload = async (
 
 // Get available images for search filter
 export async function getSampleImages(): Promise<IApiResponse<IImageDoc[]>> {
-  return apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
+  const response = await apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
+
+  // Prefix image sources with API base URL
+  if (response?.data) {
+    response.data = response.data.map((image) => ({
+      ...image,
+      label: "", //to show images without label in left side panel
+      src: image.src.startsWith("http")
+        ? image.src
+        : `${API_BASE_URL}${image.src}`,
+    }));
+  }
+
+  return response;
 }
 
 export { apiPost, apiImageUpload };

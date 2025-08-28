@@ -11,6 +11,12 @@ const nextConfig = {
                 port: '3001',
                 pathname: '/api/uploads/**',
             },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '3001',
+                pathname: '/api/static/**',
+            },
         ],
     },
 }
