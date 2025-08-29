@@ -8,7 +8,6 @@ type Props = {
     selected?: boolean;
     onSelect?: (img: IImageDoc) => void;
     width?: number;
-    height?: number;
     showLabel?: boolean;
 };
 
@@ -17,7 +16,6 @@ const ImageCard: React.FC<Props> = ({
     selected = false,
     onSelect,
     width = 120,
-    height = 140,
     showLabel = true
 }) => {
     const handleClick = () => onSelect?.(image);

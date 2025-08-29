@@ -20,7 +20,6 @@ const OtherMatchResults: React.FC<OtherMatchResultsProps> = ({
                             key={`${match.id || index}`}
                             image={match}
                             width={130}
-                            height={130}
                             showLabel={true}
                         />
                     ))

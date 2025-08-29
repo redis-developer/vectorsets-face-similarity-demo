@@ -18,7 +18,6 @@ type Props = {
 
 const LEFT_SIDE_PANEL_WIDTH = 300;
 const IMG_WIDTH = 100;
-const IMG_HEIGHT = 100;
 
 const LeftSidePanel: React.FC<Props> = ({
     width = LEFT_SIDE_PANEL_WIDTH,
@@ -118,7 +117,6 @@ const LeftSidePanel: React.FC<Props> = ({
                                 image={image}
                                 onSelect={handleImageSelect}
                                 width={IMG_WIDTH}
-                                height={IMG_HEIGHT}
                                 showLabel={false}
                             />
                         ))}
