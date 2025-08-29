@@ -26,7 +26,7 @@ const MainPanel: React.FC<MainPanelProps> = ({ selectedImage }) => {
     return (
         <div className={styles.mainPanel}>
             <Header title={PAGE_LABELS.title} />
-            <SearchBar />
+            {/* <SearchBar /> */}
             <NearestMatchResult
                 selectedImage={selectedImage}
                 celebrityMatch={celebrityMatch}

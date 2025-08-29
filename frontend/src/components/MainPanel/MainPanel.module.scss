@@ -1,8 +1,18 @@
 .mainPanel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 12px;
+  padding: 12px 20px 20px 20px;
   flex: 1;
-  overflow-y: auto;
+}
+
+/* Fixed heights for top containers */
+.mainPanel > *:not(:last-child) {
+  flex-shrink: 0;
+}
+
+/* Last child (OtherMatchResults) takes remaining space */
+.mainPanel > *:last-child {
+  flex: 1;
+  min-height: 0;
 }

@@ -25,8 +25,8 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                     {selectedImage ? (
                         <ImageCard
                             image={selectedImage}
-                            width={200}
-                            height={200}
+                            width={150}
+                            height={150}
                             showLabel={!selectedImage.fromUpload}
                         />
                     ) : (
@@ -52,8 +52,8 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                     {celebrityMatch ? (
                         <ImageCard
                             image={celebrityMatch}
-                            width={200}
-                            height={200}
+                            width={150}
+                            height={150}
                             showLabel={true}
                         />
                     ) : (
