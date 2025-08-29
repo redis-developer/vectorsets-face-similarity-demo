@@ -37,7 +37,7 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
             </div>
 
             <div className={styles.matchingSection}>
-                <MatchingProgress isSearching={isSearching} />
+                {isSearching && <MatchingProgress isSearching={isSearching} />}
                 {searchError && (
                     <div className={styles.errorMessage}>
                         <span>{searchError}</span>
@@ -58,7 +58,7 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
             </div>
 
             <div className={styles.celebrityMatchSection}>
-                <label className={styles.sectionLabel}>Celebrity Twin is</label>
+                <label className={styles.sectionLabel}>Best Match</label>
                 <div className={styles.imageContainer}>
                     {celebrityMatch ? (
                         <ImageCard
