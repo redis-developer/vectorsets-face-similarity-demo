@@ -52,7 +52,12 @@ const ImageCard: React.FC<Props> = ({
             </div>
 
             {image.label && showLabel && (
-                <div className={styles.label}>{image.label}</div>
+                <div
+                    className={styles.label}
+                    title={image.label}
+                >
+                    {image.label}
+                </div>
             )}
         </button>
     );

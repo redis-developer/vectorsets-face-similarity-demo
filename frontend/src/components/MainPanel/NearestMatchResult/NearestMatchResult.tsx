@@ -25,7 +25,7 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                             image={selectedImage}
                             width={200}
                             height={200}
-                            showLabel={true}
+                            showLabel={!selectedImage.fromUpload}
                         />
                     ) : (
                         <div className={styles.emptyImagePlaceholder}>
