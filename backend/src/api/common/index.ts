@@ -25,10 +25,13 @@ const convertVectorSetSearchResultsToObjectArr = (results?: any[]) => {
   const returnResults = [];
   if (results?.length) {
     for (let i = 0; i < results.length; i += 3) {
+      const elementId = results[i];
+      const roundedScore = Number(results[i + 1]).toFixed(4);
       const attrs = JSON.parse(results[i + 2]);
+
       returnResults.push({
-        elementId: results[i],
-        score: results[i + 1],
+        elementId: elementId,
+        score: roundedScore,
         ...attrs,
       });
     }

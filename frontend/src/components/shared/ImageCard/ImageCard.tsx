@@ -17,10 +17,26 @@ const ImageCard: React.FC<Props> = ({
     selected = false,
     onSelect,
     width = 120,
-    height = 120,
+    height = 140,
     showLabel = true
 }) => {
     const handleClick = () => onSelect?.(image);
+
+    // Calculate content height based on whether we have label and/or score
+    const hasLabel = image.label && showLabel;
+    const hasScore = image.meta?.score !== undefined;
+    const hasBoth = hasLabel && hasScore;
+
+    const calculateImageHeight = (cardWidth: number, hasLabel: boolean, hasScore: boolean): number => {
+        // Always make image square by using the width minus padding
+        const imageSize = cardWidth - 16; // 16px for padding (8px on each side)
+        return imageSize;
+    };
+
+    const imageSize = calculateImageHeight(width, !!hasLabel, !!hasScore);
+
+    const contentSpace = hasBoth ? 40 : (hasLabel || hasScore ? 20 : 0);
+    const requiredCardHeight = imageSize + contentSpace + 16; // image + content + padding
 
     return (
         <button
@@ -31,32 +47,46 @@ const ImageCard: React.FC<Props> = ({
             aria-label={image.label ?? "Image card"}
             style={{
                 width: `${width}px`,
-                height: `${height}px`
+                height: `${requiredCardHeight}px`
             }}
         >
             <div
                 className={styles.thumbnailWrapper}
                 style={{
-                    height: (image.label && showLabel) ? `${(height - 16) * 0.8}px` : `${height - 16}px`,
-                    width: `${width - 16}px`
+                    height: `${imageSize}px`,
+                    width: `${imageSize}px`
                 }}
             >
                 <Image
                     src={image.src}
                     alt={image.label ?? "Image preview"}
                     className={styles.thumbnail}
-                    width={width - 16}
-                    height={(image.label && showLabel) ? (height - 16) * 0.8 : height - 16}
+                    width={imageSize}
+                    height={imageSize}
                     style={{ objectFit: "cover" }}
                 />
             </div>
 
-            {image.label && showLabel && (
+            {(hasLabel || hasScore) && (
                 <div
-                    className={styles.label}
-                    title={image.label}
+                    className={styles.content}
+                    style={{
+                        height: hasBoth ? '40px' : '20px'
+                    }}
                 >
-                    {image.label}
+                    {hasLabel && (
+                        <div
+                            className={styles.label}
+                            title={image.label}
+                        >
+                            {image.label}
+                        </div>
+                    )}
+                    {hasScore && (
+                        <div className={styles.score}>
+                            Score: {image.meta!.score}
+                        </div>
+                    )}
                 </div>
             )}
         </button>

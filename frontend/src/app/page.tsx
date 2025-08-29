@@ -36,7 +36,7 @@ function HomeContent() {
         try {
             const response = await existingElementSearch({
                 id: image.id,
-                count: 30,
+                count: 50,
                 filterQuery: "" // No filter for now
             })
 

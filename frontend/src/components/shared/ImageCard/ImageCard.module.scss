@@ -22,7 +22,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 8px;
+  padding: 8px 8px 12px 8px;
   transition: border-color 0.2s ease;
 
   &:hover {
@@ -55,8 +55,17 @@
   object-fit: cover;
 }
 
-.label {
+.content {
   margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.label {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;
   line-height: 1.2;
@@ -67,7 +76,22 @@
   text-overflow: ellipsis;
   max-width: 100%;
   width: 100%;
-  flex-shrink: 0;
   padding: 0 4px;
   box-sizing: border-box;
+}
+
+.score {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 10px;
+  line-height: 1.2;
+  color: #6b7280;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%;
+  padding: 0 4px;
+  box-sizing: border-box;
+  font-weight: 500;
 }
