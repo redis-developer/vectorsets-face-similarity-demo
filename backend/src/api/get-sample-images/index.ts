@@ -1,6 +1,7 @@
 import type { IImageDoc } from "../../types.js";
 import { RedisWrapperST } from "../../utils/redis.js";
 import { getConfig } from "../../config.js";
+import { formatImageResults } from "../common/index.js";
 
 const getSampleImages = async () => {
   const config = getConfig();
@@ -15,14 +16,10 @@ const getSampleImages = async () => {
     MAX_ELEMENTS
   );
 
-  const formattedResults: IImageDoc[] = [];
-  for (let res of results) {
-    formattedResults.push({
-      id: res.elementId,
-      src: `${dataset.IMAGE_PREFIX}${res.imagePath}`,
-      label: res.label,
-    });
-  }
+  const formattedResults: IImageDoc[] = formatImageResults(
+    results,
+    dataset.IMAGE_PREFIX
+  );
 
   return formattedResults;
 };

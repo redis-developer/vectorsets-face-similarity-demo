@@ -1,8 +1,14 @@
+import type { IImageDoc } from "../../types.js";
+
 import { z } from "zod";
 
 import * as InputSchemas from "../../input-schema.js";
 import { RedisWrapperST } from "../../utils/redis.js";
 import { getConfig } from "../../config.js";
+import {
+  formatImageResults,
+  convertVectorSetSearchResultsToObjectArr,
+} from "../common/index.js";
 
 const buildQuery = (
   input: z.infer<typeof InputSchemas.existingElementSearchInputSchema>
@@ -23,11 +29,20 @@ const existingElementSearch = async (
 ) => {
   const vInput = InputSchemas.existingElementSearchInputSchema.parse(input); // validate input
 
+  const config = getConfig();
+  const dataset = config.DATASETS[config.CURRENT_DATASET];
+
   const redisWrapperST = RedisWrapperST.getInstance();
   let runQuery = buildQuery(vInput);
-  const result = await redisWrapperST.rawCommandExecute(runQuery);
+  const results = (await redisWrapperST.rawCommandExecute(runQuery)) as any[];
+  const objectResults = convertVectorSetSearchResultsToObjectArr(results);
 
-  return result;
+  const formattedResults: IImageDoc[] = formatImageResults(
+    objectResults,
+    dataset.IMAGE_PREFIX
+  );
+
+  return formattedResults;
 };
 
 export { existingElementSearch };
