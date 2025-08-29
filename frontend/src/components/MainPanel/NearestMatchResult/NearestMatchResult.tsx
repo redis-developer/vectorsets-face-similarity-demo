@@ -5,8 +5,8 @@ import MatchingProgress from '@/components/shared/MatchingProgress/MatchingProgr
 import type { IImageDoc } from '@/types'
 
 interface NearestMatchResultProps {
-    selectedImage?: IImageDoc;
-    celebrityMatch?: IImageDoc;
+    selectedImage?: IImageDoc | null;
+    celebrityMatch?: IImageDoc | null;
     isSearching?: boolean;
 }
 
