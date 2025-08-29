@@ -4,8 +4,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  width: 100%;
-  max-width: 400px;
+  width: 200px; /* Fixed width to prevent layout shift */
   min-height: 120px; /* Fixed height to prevent layout shift */
 }
 

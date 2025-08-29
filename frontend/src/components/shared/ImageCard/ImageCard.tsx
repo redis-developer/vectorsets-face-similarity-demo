@@ -29,18 +29,24 @@ const ImageCard: React.FC<Props> = ({
             onClick={handleClick}
             aria-pressed={selected}
             aria-label={image.label ?? "Image card"}
-            style={{ width: `${width}px` }}
+            style={{
+                width: `${width}px`,
+                height: `${height}px`
+            }}
         >
             <div
                 className={styles.thumbnailWrapper}
-                style={{ height: (image.label && showLabel) ? `${height * 0.8}px` : `${height}px` }}
+                style={{
+                    height: (image.label && showLabel) ? `${(height - 16) * 0.8}px` : `${height - 16}px`,
+                    width: `${width - 16}px`
+                }}
             >
                 <Image
                     src={image.src}
                     alt={image.label ?? "Image preview"}
                     className={styles.thumbnail}
-                    width={width}
-                    height={(image.label && showLabel) ? height * 0.8 : height}
+                    width={width - 16}
+                    height={(image.label && showLabel) ? (height - 16) * 0.8 : height - 16}
                     style={{ objectFit: "cover" }}
                 />
             </div>
