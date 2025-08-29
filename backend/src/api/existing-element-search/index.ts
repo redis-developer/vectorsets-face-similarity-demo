@@ -37,8 +37,13 @@ const existingElementSearch = async (
   const results = (await redisWrapperST.rawCommandExecute(runQuery)) as any[];
   const objectResults = convertVectorSetSearchResultsToObjectArr(results);
 
+  // Filter out the searched element ID from results
+  const filteredResults = objectResults.filter(
+    (result) => result.elementId !== input.id
+  );
+
   const formattedResults: IImageDoc[] = formatImageResults(
-    objectResults,
+    filteredResults,
     dataset.IMAGE_PREFIX
   );
 
