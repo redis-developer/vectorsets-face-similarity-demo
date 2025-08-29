@@ -9,19 +9,34 @@ const AppContext = createContext<{
     setIsSearching: (searching: boolean) => void
     selectedImage: IImageDoc | null
     setSelectedImage: (image: IImageDoc | null) => void
+    celebrityMatch: IImageDoc | null
+    setCelebrityMatch: (match: IImageDoc | null) => void
+    otherMatches: IImageDoc[]
+    setOtherMatches: (matches: IImageDoc[]) => void
+    searchError: string | null
+    setSearchError: (error: string | null) => void
 } | null>(null)
 
 // Provider
 export function AppProvider({ children }: { children: ReactNode }) {
     const [isSearching, setIsSearching] = useState(false)
     const [selectedImage, setSelectedImage] = useState<IImageDoc | null>(null)
+    const [celebrityMatch, setCelebrityMatch] = useState<IImageDoc | null>(null)
+    const [otherMatches, setOtherMatches] = useState<IImageDoc[]>([])
+    const [searchError, setSearchError] = useState<string | null>(null)
 
     return (
         <AppContext.Provider value={{
             isSearching,
             setIsSearching,
             selectedImage,
-            setSelectedImage
+            setSelectedImage,
+            celebrityMatch,
+            setCelebrityMatch,
+            otherMatches,
+            setOtherMatches,
+            searchError,
+            setSearchError
         }}>
             {children}
         </AppContext.Provider>

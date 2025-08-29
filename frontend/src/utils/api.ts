@@ -85,25 +85,36 @@ const apiImageUpload = async (
   return response;
 };
 
+const fixImageURLs = (images: IImageDoc[]) => {
+  // Prefix image sources with API base URL
+
+  return images.map((image) => ({
+    ...image,
+    src: image.src.startsWith("http")
+      ? image.src
+      : `${API_BASE_URL}${image.src}`,
+  }));
+};
+
 export async function existingElementSearch(
   input: IExistingElementSearchInput
 ): Promise<IApiResponse<IImageDoc[]>> {
-  return apiPost<IImageDoc[]>(ENDPOINTS.EXISTING_ELEMENT_SEARCH, input);
+  const response = await apiPost<IImageDoc[]>(
+    ENDPOINTS.EXISTING_ELEMENT_SEARCH,
+    input
+  );
+  if (response?.data) {
+    response.data = fixImageURLs(response.data);
+  }
+  return response;
 }
 
 // Get available images for search filter
 export async function getSampleImages(): Promise<IApiResponse<IImageDoc[]>> {
   const response = await apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
 
-  // Prefix image sources with API base URL
   if (response?.data) {
-    response.data = response.data.map((image) => ({
-      ...image,
-      //label: "",
-      src: image.src.startsWith("http")
-        ? image.src
-        : `${API_BASE_URL}${image.src}`,
-    }));
+    response.data = fixImageURLs(response.data);
   }
 
   return response;

@@ -8,12 +8,14 @@ interface NearestMatchResultProps {
     selectedImage?: IImageDoc | null;
     celebrityMatch?: IImageDoc | null;
     isSearching?: boolean;
+    searchError?: string | null;
 }
 
 const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
     selectedImage,
     celebrityMatch,
-    isSearching = false
+    isSearching = false,
+    searchError = null
 }) => {
     return (
         <div className={styles.nearestMatchResult}>
@@ -37,6 +39,11 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
 
             <div className={styles.matchingSection}>
                 <MatchingProgress isSearching={isSearching} />
+                {searchError && (
+                    <div className={styles.errorMessage}>
+                        <span>{searchError}</span>
+                    </div>
+                )}
             </div>
 
             <div className={styles.celebrityMatchSection}>
