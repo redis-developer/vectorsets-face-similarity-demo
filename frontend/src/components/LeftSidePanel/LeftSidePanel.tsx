@@ -119,6 +119,7 @@ const LeftSidePanel: React.FC<Props> = ({
                                 onSelect={handleImageSelect}
                                 width={IMG_WIDTH}
                                 height={IMG_HEIGHT}
+                                showLabel={false}
                             />
                         ))}
                     </div>

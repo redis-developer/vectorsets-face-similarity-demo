@@ -1,10 +1,16 @@
-import { IApiResponse, IUploadResponse, IImageDoc } from "@/types";
+import {
+  IApiResponse,
+  IUploadResponse,
+  IImageDoc,
+  IExistingElementSearchInput,
+} from "@/types";
 
 import { API_BASE_URL } from "./config";
 
 const ENDPOINTS = {
   IMAGE_UPLOAD: "/imageUpload",
   GET_SAMPLE_IMAGES: "/getSampleImages",
+  EXISTING_ELEMENT_SEARCH: "/existingElementSearch",
 };
 
 const apiRequest = async <T>(
@@ -79,15 +85,11 @@ const apiImageUpload = async (
   return response;
 };
 
-// Search for similar faces
-// export async function searchSimilarFaces(
-//   request: SearchRequest
-// ): Promise<ApiResponse<SearchResult[]>> {
-//   return apiRequest<SearchResult[]>("/search", {
-//     method: "POST",
-//     body: JSON.stringify(request),
-//   });
-// }
+export async function existingElementSearch(
+  input: IExistingElementSearchInput
+): Promise<IApiResponse<IImageDoc[]>> {
+  return apiPost<IImageDoc[]>(ENDPOINTS.EXISTING_ELEMENT_SEARCH, input);
+}
 
 // Get available images for search filter
 export async function getSampleImages(): Promise<IApiResponse<IImageDoc[]>> {
@@ -97,7 +99,7 @@ export async function getSampleImages(): Promise<IApiResponse<IImageDoc[]>> {
   if (response?.data) {
     response.data = response.data.map((image) => ({
       ...image,
-      label: "", //to show images without label in left side panel
+      //label: "",
       src: image.src.startsWith("http")
         ? image.src
         : `${API_BASE_URL}${image.src}`,

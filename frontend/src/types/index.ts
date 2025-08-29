@@ -23,3 +23,9 @@ export interface IUploadResponse {
   url: string;
   filename: string;
 }
+
+export interface IExistingElementSearchInput {
+  id: string;
+  count: number;
+  filterQuery: string;
+}

@@ -9,6 +9,7 @@ type Props = {
     onSelect?: (img: IImageDoc) => void;
     width?: number;
     height?: number;
+    showLabel?: boolean;
 };
 
 const ImageCard: React.FC<Props> = ({
@@ -16,7 +17,8 @@ const ImageCard: React.FC<Props> = ({
     selected = false,
     onSelect,
     width = 120,
-    height = 120
+    height = 120,
+    showLabel = true
 }) => {
     const handleClick = () => onSelect?.(image);
 
@@ -31,19 +33,19 @@ const ImageCard: React.FC<Props> = ({
         >
             <div
                 className={styles.thumbnailWrapper}
-                style={{ height: image.label ? `${height * 0.8}px` : `${height}px` }}
+                style={{ height: (image.label && showLabel) ? `${height * 0.8}px` : `${height}px` }}
             >
                 <Image
                     src={image.src}
                     alt={image.label ?? "Image preview"}
                     className={styles.thumbnail}
                     width={width}
-                    height={image.label ? height * 0.8 : height}
+                    height={(image.label && showLabel) ? height * 0.8 : height}
                     style={{ objectFit: "cover" }}
                 />
             </div>
 
-            {image.label && (
+            {image.label && showLabel && (
                 <div className={styles.label}>{image.label}</div>
             )}
         </button>

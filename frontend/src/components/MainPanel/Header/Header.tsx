@@ -1,10 +1,14 @@
 import React from 'react'
 import styles from './Header.module.scss'
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    title: string
+}
+
+const Header: React.FC<HeaderProps> = ({ title }) => {
     return (
         <div className={styles.header}>
-            {/* Component content will go here */}
+            <h1 className={styles.title}>{title}</h1>
         </div>
     )
 }
