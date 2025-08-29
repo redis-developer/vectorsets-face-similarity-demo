@@ -43,6 +43,18 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                         <span>{searchError}</span>
                     </div>
                 )}
+                {celebrityMatch && (
+                    <div className={styles.matchInfo}>
+                        <div className={styles.celebrityName}>
+                            {celebrityMatch.label}
+                        </div>
+                        {celebrityMatch.meta?.score !== undefined && (
+                            <div className={styles.matchScore}>
+                                Score: {celebrityMatch.meta.score}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className={styles.celebrityMatchSection}>
@@ -52,7 +64,7 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                         <ImageCard
                             image={celebrityMatch}
                             width={160}
-                            showLabel={true}
+                            showLabel={false}
                         />
                     ) : (
                         <div className={styles.emptyImagePlaceholder}>
