@@ -35,6 +35,7 @@ interface SearchBarProps {
     onSearch: (data: SearchFormData) => void;
     onClear?: () => void;
     rowConfig?: number[]; // New prop for row configuration
+    mode?: 'manual' | 'auto'; // New prop for search mode
 }
 
 const MAX_FIELDS_PER_ROW = 3;
@@ -72,14 +73,29 @@ const splitFieldsIntoRows = (inputFields: InputField[], rowConfig?: number[]): I
     return fieldRows;
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ inputFields, onSearch, onClear, rowConfig }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+    inputFields,
+    onSearch,
+    onClear,
+    rowConfig,
+    mode = 'manual'
+}) => {
     const [formData, setFormData] = useState<SearchFormData>({})
 
     const handleInputChange = (fieldName: string, value: string | number) => {
-        setFormData(prev => ({
-            ...prev,
+        const newFormData = {
+            ...formData,
             [fieldName]: value
-        }))
+        }
+        setFormData(newFormData)
+
+        // Auto-search if mode is 'auto'
+        if (mode === 'auto') {
+            // Debounce the search to avoid too many calls
+            setTimeout(() => {
+                onSearch(newFormData)
+            }, 300)
+        }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -90,6 +106,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ inputFields, onSearch, onClear, r
     const handleClear = () => {
         setFormData({})
         onClear?.()
+
+        // Auto-search with empty data if mode is 'auto'
+        if (mode === 'auto') {
+            onSearch({})
+        }
     }
 
     // Split inputFields into rows using the utility function
@@ -172,18 +193,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ inputFields, onSearch, onClear, r
                     ))}
                 </div>
 
-                <div className={styles.actions}>
-                    <button type="submit" className={styles.searchButton}>
-                        Search
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleClear}
-                        className={styles.clearButton}
-                    >
-                        Clear
-                    </button>
-                </div>
+                {mode === 'manual' && (
+                    <div className={styles.actions}>
+                        <button type="submit" className={styles.searchButton}>
+                            Search
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleClear}
+                            className={styles.clearButton}
+                        >
+                            Clear
+                        </button>
+                    </div>
+                )}
             </form>
         </div>
     )
