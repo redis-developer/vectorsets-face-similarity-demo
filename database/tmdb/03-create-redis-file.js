@@ -38,6 +38,47 @@ function formatRedisCommand(args) {
     return command + '\n';
 }
 
+// -------- Country extraction function ----------
+function getCountry(placeOfBirth) {
+    if (!placeOfBirth || placeOfBirth.trim() === '') {
+        return null;
+    }
+
+    // Clean up the input
+    let cleaned = placeOfBirth.trim();
+
+    // Remove trailing periods and spaces
+    cleaned = cleaned.replace(/\.$/, '').trim();
+
+    // Handle dash-separated entries
+    if (cleaned.includes(' - ')) {
+        const parts = cleaned.split(' - ');
+        const lastPart = parts[parts.length - 1].trim();
+        return cleanCountryName(lastPart);
+    }
+
+    // Handle comma-separated entries
+    if (cleaned.includes(',')) {
+        const parts = cleaned.split(',').map(part => part.trim());
+        const lastPart = parts[parts.length - 1];
+        return cleanCountryName(lastPart);
+    }
+
+    // Single entry (likely just a country)
+    return cleanCountryName(cleaned);
+}
+
+function cleanCountryName(country) {
+    if (!country) return null;
+
+    // Remove dots, extra spaces, and capitalize
+    return country
+        .replace(/\./g, '') // Remove all dots
+        .replace(/\s+/g, '_') // Replace multiple spaces with _
+        .trim()
+        .toUpperCase();
+}
+
 // -------- main ----------
 async function main() {
     const out = fs.createWriteStream(OUTPUT);
@@ -86,13 +127,17 @@ async function main() {
             return str;
         }
 
+        const fixedLabel = fixString(rec.label);
+        const fixedPlaceOfBirth = fixString(rec.place_of_birth);
         const attrs = {
-            label: fixString(rec.label),
-            imdbId: rec.imdb_id || null,
-            department: fixString(rec.known_for_department) || null,
-            placeOfBirth: fixString(rec.place_of_birth) || null,
-            popularity: rec.popularity ?? null,
+            label: fixedLabel,
             imagePath: rec.imagePath ?? "",
+            charCount: fixedLabel.length,
+            imdbId: rec.imdb_id || null,
+            department: fixString(rec.department) || null,
+            placeOfBirth: fixedPlaceOfBirth || null,
+            popularity: parseFloat(rec.popularity) ?? null,
+            country: getCountry(fixedPlaceOfBirth) || null,
         };
         const attrStr = JSON.stringify(attrs);
 
