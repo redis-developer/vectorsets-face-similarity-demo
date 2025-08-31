@@ -4,13 +4,14 @@ import { z } from "zod";
 
 import * as InputSchemas from "../../input-schema.js";
 import { RedisWrapperST } from "../../utils/redis.js";
-import { getConfig } from "../../config.js";
+import { getConfig, DATASET_NAMES } from "../../config.js";
 // import { getImageEmbeddings } from "./image-embeddings.js";
 import { getCelebEmbedding } from "./celeb-embeddings.js";
 import {
   convertVectorSetSearchResultsToObjectArr,
   formatImageResults,
 } from "../common/index.js";
+import { getImageEmbeddings } from "./image-embeddings.js";
 
 const buildQuery = async (
   input: z.infer<typeof InputSchemas.newElementSearchInputSchema>
@@ -24,7 +25,13 @@ const buildQuery = async (
   if (input.filterQuery) {
     filterQuery = `FILTER '${input.filterQuery}'`;
   }
-  const imageEmbeddings = await getCelebEmbedding(input.localImageUrl);
+  let imageEmbeddings: number[] = [];
+
+  if (config.CURRENT_DATASET === DATASET_NAMES.VSET_CELEB) {
+    imageEmbeddings = await getCelebEmbedding(input.localImageUrl);
+  } else if (config.CURRENT_DATASET === DATASET_NAMES.TMDB) {
+    imageEmbeddings = await getImageEmbeddings(input.localImageUrl);
+  }
   const imageEmbeddingsStr = imageEmbeddings
     .map((val) => val.toString())
     .join(" ");

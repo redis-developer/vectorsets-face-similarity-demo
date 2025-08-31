@@ -4,6 +4,8 @@ import {
   RawImage,
   env,
 } from "@xenova/transformers";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Configure transformers.js
 env.allowLocalModels = true;
@@ -21,11 +23,34 @@ async function loadClipVision() {
   }
 }
 
+function resolveImagePath(imagePath: string): string {
+  // Handle localhost URLs by removing /api prefix
+  let processedImagePath = imagePath;
+  if (imagePath.startsWith("http:")) {
+    const url = new URL(imagePath);
+    if (url.pathname.startsWith("/api")) {
+      processedImagePath = url.pathname.substring(4); // Remove /api prefix
+    }
+  }
+
+  // Add backend path prefix for relative paths
+  if (processedImagePath.startsWith("/")) {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const backendRoot = path.resolve(__dirname, "../../.."); // Go up from api/new-element-search/ to backend/
+    processedImagePath = path.join(backendRoot, processedImagePath);
+  }
+
+  return processedImagePath;
+}
+
 export async function getImageEmbeddings(imagePath: string): Promise<number[]> {
   await loadClipVision();
 
-  // Load image from disk
-  const image = await RawImage.read(imagePath);
+  const resolvedImagePath = resolveImagePath(imagePath);
+
+  // Load image directly from path (works for both local files and processed localhost URLs)
+  const image = await RawImage.read(resolvedImagePath);
 
   // Preprocess + forward pass
   const inputs = await processor(image);

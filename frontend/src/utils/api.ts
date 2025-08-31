@@ -33,7 +33,7 @@ const apiRequest = async <T>(
 
     const result = await response.json();
 
-    if (!response.ok) {
+    if (!response.ok || result.error) {
       const errorMessage = "API request failed, Check console for details!";
       showErrorToast(errorMessage, { result });
       return {
