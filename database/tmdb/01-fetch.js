@@ -37,7 +37,7 @@ const HF_TOKEN = process.env.HF_TOKEN || argVal("--hf-token", ""); // optional t
 
 // Output
 const OUTPUT_DIR = argVal("--out-root", "output");
-const OUT_DIR = path.join(__dirname, OUTPUT_DIR, argVal("--out-dir", "tmdb_images"));
+const OUT_DIR = path.join(__dirname, OUTPUT_DIR, argVal("--out-dir", "images"));
 const OUT_NDJSON = path.join(__dirname, OUTPUT_DIR, argVal("--out-file", "tmdb.ndjson"));
 const CHECKPOINT = path.join(__dirname, OUTPUT_DIR, ".tmdb_checkpoint.json");
 

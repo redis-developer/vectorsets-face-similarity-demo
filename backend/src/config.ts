@@ -3,7 +3,7 @@ import "dotenv/config";
 
 const DATASET_NAMES = {
   VSET_CELEB: "VSET_CELEB",
-  IMDB: "IMDB",
+  TMDB: "TMDB",
 } as const;
 
 type DatasetNameType = (typeof DATASET_NAMES)[keyof typeof DATASET_NAMES];
@@ -16,10 +16,10 @@ const DATASETS: Record<DatasetNameType, IDataset> = {
       DIM: 768,
     },
   },
-  IMDB: {
-    IMAGE_PREFIX: "/static/imdb/",
+  TMDB: {
+    IMAGE_PREFIX: "/static/tmdb/",
     VECTOR_SET: {
-      KEY: "vset:imdb",
+      KEY: "vset:tmdb",
       DIM: 768,
     },
   },
@@ -39,7 +39,7 @@ const getConfig = () => {
     UPLOAD_DIR: process.env.UPLOAD_DIR || "uploads",
     UPLOAD_MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
 
-    CURRENT_DATASET: DATASET_NAMES.VSET_CELEB as DatasetNameType,
+    CURRENT_DATASET: DATASET_NAMES.TMDB as DatasetNameType,
     DATASETS: DATASETS,
   };
 };
