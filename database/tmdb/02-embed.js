@@ -46,7 +46,7 @@ async function main() {
         if (!line.trim()) continue;
         const rec = JSON.parse(line);
         try {
-            const emb = await embedImage(path.resolve(rec.imagePath));
+            const emb = await embedImage(path.resolve(__dirname, OUTPUT_DIR, rec.imagePath));
             out.write(JSON.stringify({ ...rec, embeddings: emb }) + "\n");
             if (++i % 200 === 0) console.log(`Embedded ${i}…`);
         } catch (e) {
