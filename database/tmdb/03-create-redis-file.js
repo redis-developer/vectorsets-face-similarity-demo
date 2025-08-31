@@ -79,17 +79,20 @@ async function main() {
             return Number.isFinite(x) ? String(x) : "0";
         });
 
-        let label = rec.label ?? "";
-        label = label.replace(/'/g, ''); // like Auli'i
-        label = label.replace(/\\"/g, ''); // like \"The Rock\"
+        const fixString = (str) => {
+            str = str || "";
+            str = str.replace(/'/g, ''); // like Auli'i
+            str = str.replace(/\\"/g, ''); // like \"The Rock\"
+            return str;
+        }
 
         const attrs = {
-            // include whatever you stored in NDJSON:
-            label: label,
+            label: fixString(rec.label),
+            imdbId: rec.imdb_id || null,
+            department: fixString(rec.known_for_department) || null,
+            placeOfBirth: fixString(rec.place_of_birth) || null,
+            popularity: rec.popularity ?? null,
             imagePath: rec.imagePath ?? "",
-            charCount: label.length,
-            // you can add more fields here if present:
-            // country: rec.country, category: rec.category, etc.
         };
         const attrStr = JSON.stringify(attrs);
 
