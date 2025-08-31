@@ -1,11 +1,11 @@
 'use client'
+import type { IApiResponse, IImageDoc } from '@/types'
 
 import { AppProvider, useAppContext } from '@/contexts/AppContext'
 import LeftSidePanel from '@/components/LeftSidePanel/LeftSidePanel'
 import MainPanel from '@/components/MainPanel/MainPanel'
 import styles from './page.module.scss'
-import type { IImageDoc } from '@/types'
-import { existingElementSearch } from '@/utils/api'
+import { existingElementSearch, newElementSearch } from '@/utils/api'
 
 function HomeContent() {
     const {
@@ -19,26 +19,36 @@ function HomeContent() {
 
     const handleImageSelect = async (image: IImageDoc) => {
         setSelectedImage(image)
-        await performSearch(image)
+        await performSearch(image, false);
     }
 
     const handleImageUpload = async (image: IImageDoc) => {
         setSelectedImage(image)
-        // await performSearch(image)
+        await performSearch(image, true);
     }
 
-    const performSearch = async (image: IImageDoc) => {
+    const performSearch = async (image: IImageDoc, isNewElement: boolean) => {
         setIsSearching(true)
         setSearchError(null)
         setCelebrityMatch(null)
         setOtherMatches([])
 
         try {
-            const response = await existingElementSearch({
-                id: image.id,
-                count: 50,
-                filterQuery: "" // No filter for now
-            })
+            let response: IApiResponse<IImageDoc[]>;
+            const resultCount = 50;
+            if (isNewElement) {
+                response = await newElementSearch({
+                    localImageUrl: image.src,
+                    count: resultCount,
+                    filterQuery: "" // No filter for now
+                })
+            } else {
+                response = await existingElementSearch({
+                    id: image.id,
+                    count: resultCount,
+                    filterQuery: "" // No filter for now
+                })
+            }
 
             if (response.data && response.data.length > 0) {
                 // First result goes to celebrity match

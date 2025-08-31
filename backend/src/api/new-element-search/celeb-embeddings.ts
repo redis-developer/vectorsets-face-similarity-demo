@@ -1,13 +1,18 @@
-import fs from "fs";
 import fetch from "node-fetch";
 import FormData from "form-data";
 
 import { getConfig } from "../../config.js";
+import { getImageData } from "../common/index.js";
 
 const getCelebEmbedding = async (imagePath: string): Promise<number[]> => {
   const config = getConfig();
   const form = new FormData();
-  form.append("file", fs.createReadStream(imagePath));
+
+  const imageData = await getImageData(imagePath);
+  form.append("file", imageData.buffer, {
+    filename: imageData.filename,
+    contentType: imageData.contentType,
+  });
 
   const res = await fetch(config.EMBED_PYTHON_URL, {
     method: "POST",

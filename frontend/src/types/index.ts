@@ -29,3 +29,9 @@ export interface IExistingElementSearchInput {
   count: number;
   filterQuery: string;
 }
+
+export interface INewElementSearchInput {
+  localImageUrl: string;
+  count: number;
+  filterQuery: string;
+}

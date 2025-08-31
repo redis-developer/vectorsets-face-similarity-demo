@@ -3,6 +3,7 @@ import {
   IUploadResponse,
   IImageDoc,
   IExistingElementSearchInput,
+  INewElementSearchInput,
 } from "@/types";
 
 import { API_BASE_URL } from "./config";
@@ -11,6 +12,7 @@ const ENDPOINTS = {
   IMAGE_UPLOAD: "/imageUpload",
   GET_SAMPLE_IMAGES: "/getSampleImages",
   EXISTING_ELEMENT_SEARCH: "/existingElementSearch",
+  NEW_ELEMENT_SEARCH: "/newElementSearch",
 };
 
 const apiRequest = async <T>(
@@ -56,6 +58,20 @@ const apiPost = async <T>(
   };
   return apiRequest<T>(endpoint, options);
 };
+//--------------------------------
+
+const fixImageURLs = (images: IImageDoc[]) => {
+  // Prefix image sources with API base URL
+
+  return images.map((image) => ({
+    ...image,
+    src: image.src.startsWith("http")
+      ? image.src
+      : `${API_BASE_URL}${image.src}`,
+  }));
+};
+
+//--------------------------------
 
 const apiImageUpload = async (
   file: File
@@ -85,20 +101,16 @@ const apiImageUpload = async (
   return response;
 };
 
-const fixImageURLs = (images: IImageDoc[]) => {
-  // Prefix image sources with API base URL
+const getSampleImages = async () => {
+  const response = await apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
 
-  return images.map((image) => ({
-    ...image,
-    src: image.src.startsWith("http")
-      ? image.src
-      : `${API_BASE_URL}${image.src}`,
-  }));
+  if (response?.data) {
+    response.data = fixImageURLs(response.data);
+  }
+
+  return response;
 };
-
-export async function existingElementSearch(
-  input: IExistingElementSearchInput
-): Promise<IApiResponse<IImageDoc[]>> {
+const existingElementSearch = async (input: IExistingElementSearchInput) => {
   const response = await apiPost<IImageDoc[]>(
     ENDPOINTS.EXISTING_ELEMENT_SEARCH,
     input
@@ -107,17 +119,23 @@ export async function existingElementSearch(
     response.data = fixImageURLs(response.data);
   }
   return response;
-}
+};
 
-// Get available images for search filter
-export async function getSampleImages(): Promise<IApiResponse<IImageDoc[]>> {
-  const response = await apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
-
+const newElementSearch = async (input: INewElementSearchInput) => {
+  const response = await apiPost<IImageDoc[]>(
+    ENDPOINTS.NEW_ELEMENT_SEARCH,
+    input
+  );
   if (response?.data) {
     response.data = fixImageURLs(response.data);
   }
-
   return response;
-}
+};
 
-export { apiPost, apiImageUpload };
+export {
+  apiPost,
+  apiImageUpload,
+  existingElementSearch,
+  getSampleImages,
+  newElementSearch,
+};

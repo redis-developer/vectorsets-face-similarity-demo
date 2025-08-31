@@ -1,4 +1,5 @@
-import type { DatasetNameType } from "../../config.js";
+import type { IImageDoc } from "../../types.js";
+
 import { z } from "zod";
 
 import * as InputSchemas from "../../input-schema.js";
@@ -6,6 +7,10 @@ import { RedisWrapperST } from "../../utils/redis.js";
 import { getConfig } from "../../config.js";
 // import { getImageEmbeddings } from "./image-embeddings.js";
 import { getCelebEmbedding } from "./celeb-embeddings.js";
+import {
+  convertVectorSetSearchResultsToObjectArr,
+  formatImageResults,
+} from "../common/index.js";
 
 const buildQuery = async (
   input: z.infer<typeof InputSchemas.newElementSearchInputSchema>
@@ -31,12 +36,20 @@ const newElementSearch = async (
 ) => {
   const vInput = InputSchemas.newElementSearchInputSchema.parse(input); // validate input
 
+  const config = getConfig();
+  const dataset = config.DATASETS[config.CURRENT_DATASET];
+
   const redisWrapperST = RedisWrapperST.getInstance();
   let runQuery = await buildQuery(vInput);
-  const result = await redisWrapperST.rawCommandExecute(runQuery);
-  console.log(result);
+  const results = (await redisWrapperST.rawCommandExecute(runQuery)) as any[];
+  const objectResults = convertVectorSetSearchResultsToObjectArr(results);
 
-  return result;
+  const formattedResults: IImageDoc[] = formatImageResults(
+    objectResults,
+    dataset.IMAGE_PREFIX
+  );
+
+  return formattedResults;
 };
 
 export { newElementSearch };

@@ -1,5 +1,8 @@
 import type { IImageDoc } from "../../types.js";
 
+import fs from "fs";
+import fetch from "node-fetch";
+
 const convertVectorSetSearchResultsToObjectArr = (results?: any[]) => {
   /**
  results  = [
@@ -55,4 +58,39 @@ const formatImageResults = (results: any[], imagePrefix: string) => {
   return formattedResults;
 };
 
-export { formatImageResults, convertVectorSetSearchResultsToObjectArr };
+const getImageData = async (
+  imagePath: string
+): Promise<{ buffer: Buffer; filename: string; contentType: string }> => {
+  let buffer: Buffer;
+  let filename: string;
+  let contentType: string;
+
+  // Check if imagePath is a URL
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    // Fetch the image from URL
+    const imageResponse = await fetch(imagePath);
+    if (!imageResponse.ok) {
+      throw new Error(`Failed to fetch image from URL: ${imagePath}`);
+    }
+    buffer = await imageResponse.buffer();
+    filename = imagePath.split("/").pop() || "image.jpg";
+    contentType = imageResponse.headers.get("content-type") || "image/jpeg";
+  } else {
+    // Read local file
+    buffer = fs.readFileSync(imagePath);
+    filename = imagePath.split("/").pop() || "image.jpg";
+    contentType = "image/jpeg"; // Default content type for local files
+  }
+
+  return {
+    buffer,
+    filename,
+    contentType,
+  };
+};
+
+export {
+  formatImageResults,
+  convertVectorSetSearchResultsToObjectArr,
+  getImageData,
+};
