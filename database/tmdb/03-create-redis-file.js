@@ -57,9 +57,10 @@ function getCountry(placeOfBirth) {
         return cleanCountryName(lastPart);
     }
 
-    // Handle comma-separated entries
-    if (cleaned.includes(',')) {
-        const parts = cleaned.split(',').map(part => part.trim());
+    // Handle comma-separated entries (including Chinese comma ，)
+    if (cleaned.includes(',') || cleaned.includes('，')) {
+        // Split by both regular comma and Chinese comma
+        const parts = cleaned.split(/[,，]/).map(part => part.trim());
         const lastPart = parts[parts.length - 1];
         return cleanCountryName(lastPart);
     }
@@ -71,6 +72,16 @@ function getCountry(placeOfBirth) {
 function cleanCountryName(country) {
     if (!country) return null;
 
+    // Check if the country name contains primarily non-English characters
+    const nonEnglishChars = country.match(/[^\x00-\x7F]/g);
+    if (nonEnglishChars && nonEnglishChars.length > 0) {
+        // If more than 50% of characters are non-English, skip this country
+        const nonEnglishRatio = nonEnglishChars.length / country.length;
+        if (nonEnglishRatio > 0.5) {
+            return null;
+        }
+    }
+
     // Remove dots, extra spaces, and capitalize
     return country
         .replace(/\./g, '') // Remove all dots
@@ -78,6 +89,7 @@ function cleanCountryName(country) {
         .trim()
         .toUpperCase();
 }
+
 
 // -------- main ----------
 async function main() {
@@ -88,6 +100,7 @@ async function main() {
     });
 
     let count = 0, skipped = 0;
+    const uniqueCountries = new Set();
 
     for await (const line of rl) {
         const t = line.trim();
@@ -129,6 +142,10 @@ async function main() {
 
         const fixedLabel = fixString(rec.label);
         const fixedPlaceOfBirth = fixString(rec.place_of_birth);
+        const country = getCountry(fixedPlaceOfBirth);
+
+        uniqueCountries.add(country);
+
         const attrs = {
             label: fixedLabel,
             imagePath: rec.imagePath ?? "",
@@ -137,7 +154,7 @@ async function main() {
             department: fixString(rec.department) || null,
             placeOfBirth: fixedPlaceOfBirth || null,
             popularity: parseFloat(rec.popularity) ?? null,
-            country: getCountry(fixedPlaceOfBirth) || null,
+            country: country || null,
         };
         const attrStr = JSON.stringify(attrs);
 
@@ -157,6 +174,12 @@ async function main() {
 
     process.stdout.write(`\rEncoded ${count} commands. Skipped ${skipped}.  \n`);
     console.log(`Redis commands file written -> ${OUTPUT}`);
+
+    // Write sorted countries to JSON file
+    const sortedCountries = Array.from(uniqueCountries).sort();
+    const countriesOutput = path.join(__dirname, OUTPUT_DIR, "countries.json");
+    fs.writeFileSync(countriesOutput, JSON.stringify(sortedCountries, null, 2));
+    console.log(`Countries written to ${countriesOutput}`);
 }
 
 main().catch((e) => {
