@@ -29,7 +29,7 @@ const buildQuery = async (
 
   if (config.CURRENT_DATASET === DATASET_NAMES.VSET_CELEB) {
     imageEmbeddings = await getCelebEmbedding(input.localImageUrl);
-  } else if (config.CURRENT_DATASET === DATASET_NAMES.TMDB) {
+  } else if (config.CURRENT_DATASET === DATASET_NAMES.VSET_TMDB) {
     imageEmbeddings = await getImageEmbeddings(input.localImageUrl);
   }
   const imageEmbeddingsStr = imageEmbeddings
