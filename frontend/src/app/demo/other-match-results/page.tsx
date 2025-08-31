@@ -8,7 +8,6 @@ import type { IImageDoc } from '@/types'
 export default function OtherMatchResultsDemo() {
     const [sampleImages, setSampleImages] = useState<IImageDoc[]>([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
         const fetchSampleImages = async () => {
@@ -19,12 +18,10 @@ export default function OtherMatchResultsDemo() {
                 if (response.data) {
                     // Take more images to test scrolling
                     setSampleImages(response.data.slice(0, 50))
-                } else {
-                    setError(response.error || 'Failed to fetch sample images')
                 }
             } catch (err) {
-                setError('An error occurred while fetching images')
-                console.error('Error fetching sample images:', err)
+                // API utility handles all error toasts, just log for debugging
+                console.error('Unexpected error in fetchSampleImages:', err)
             } finally {
                 setLoading(false)
             }
@@ -44,21 +41,6 @@ export default function OtherMatchResultsDemo() {
                 color: '#666'
             }}>
                 Loading sample images...
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '400px',
-                fontSize: '18px',
-                color: '#dc3545'
-            }}>
-                Error: {error}
             </div>
         )
     }

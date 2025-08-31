@@ -7,6 +7,7 @@ import {
 } from "@/types";
 
 import { API_BASE_URL } from "./config";
+import { showErrorToast } from "./toast";
 
 const ENDPOINTS = {
   IMAGE_UPLOAD: "/imageUpload",
@@ -30,17 +31,25 @@ const apiRequest = async <T>(
       ...options,
     });
 
-    const data = await response.json();
+    const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "API request failed");
+      const errorMessage = "API request failed, Check console for details!";
+      showErrorToast(errorMessage, { result });
+      return {
+        data: null,
+        error: errorMessage,
+      };
     }
 
-    return data;
+    return result;
   } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    showErrorToast(errorMessage, error);
     return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
+      data: null,
+      error: errorMessage,
     };
   }
 };
@@ -58,6 +67,7 @@ const apiPost = async <T>(
   };
   return apiRequest<T>(endpoint, options);
 };
+
 //--------------------------------
 
 const fixImageURLs = (images: IImageDoc[]) => {
@@ -77,7 +87,12 @@ const apiImageUpload = async (
   file: File
 ): Promise<IApiResponse<IUploadResponse>> => {
   if (!file.type.startsWith("image/")) {
-    throw new Error("Please select an image file.");
+    const errorMessage = "Please select an image file.";
+    showErrorToast(errorMessage);
+    return {
+      data: null,
+      error: errorMessage,
+    };
   }
 
   const formData = new FormData();
@@ -110,6 +125,7 @@ const getSampleImages = async () => {
 
   return response;
 };
+
 const existingElementSearch = async (input: IExistingElementSearchInput) => {
   const response = await apiPost<IImageDoc[]>(
     ENDPOINTS.EXISTING_ELEMENT_SEARCH,

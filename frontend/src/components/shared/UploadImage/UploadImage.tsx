@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import styles from "./UploadImage.module.scss";
 import { apiImageUpload } from "@/utils/api";
 import type { IImageDoc } from "@/types";
+import { showErrorToast } from '@/utils/toast';
 
 type Props = {
     onUploaded?: (image: IImageDoc) => void; // parent can update the grid/selection
@@ -15,7 +16,6 @@ type Props = {
 const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [busy, setBusy] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     const handlePick = () => inputRef.current?.click();
 
@@ -25,12 +25,12 @@ const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth
 
         if (fileSizeMax) {
             if (file.size > fileSizeMax) {
-                setError(file.name + " file is larger than " + (fileSizeMax / 1024 / 1024).toFixed(2) + " MB");
+                const errorMessage = file.name + " file is larger than " + (fileSizeMax / 1024 / 1024).toFixed(2) + " MB";
+                showErrorToast(errorMessage);
                 return;
             }
         }
 
-        setError(null);
         setBusy(true);
         try {
             const uploaded = await apiImageUpload(file);
@@ -42,14 +42,13 @@ const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth
                         filename: uploaded.data?.filename || "",
                     });
                 }
-            } else {
-                setError(uploaded.error || "Upload failed");
             }
         } catch (err: any) {
-            setError(err?.message || "Upload API failed");
+            // API utility handles all error toasts, just log for debugging
+            console.error('Unexpected error in handleChange:', err);
         } finally {
             setBusy(false);
-            // reset input so the same file can be selected aga in if needed
+            // reset input so the same file can be selected again if needed
             if (inputRef.current) inputRef.current.value = "";
         }
     };
@@ -83,8 +82,6 @@ const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth
             >
                 {busy ? "Uploading…" : "Choose Photo"}
             </button>
-
-            {error && <div className={styles["uploadImage__error"]}>{error}</div>}
 
             {/* <div className={styles["uploadImage__hint"]}>
                 JPG, PNG, or WebP

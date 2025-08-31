@@ -13,8 +13,7 @@ export interface IImageDoc {
 }
 
 export interface IApiResponse<T> {
-  success: boolean;
-  data?: T;
+  data?: T | null;
   error?: string;
 }
 

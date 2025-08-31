@@ -13,8 +13,6 @@ const AppContext = createContext<{
     setCelebrityMatch: (match: IImageDoc | null) => void
     otherMatches: IImageDoc[]
     setOtherMatches: (matches: IImageDoc[]) => void
-    searchError: string | null
-    setSearchError: (error: string | null) => void
 } | null>(null)
 
 // Provider
@@ -23,7 +21,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [selectedImage, setSelectedImage] = useState<IImageDoc | null>(null)
     const [celebrityMatch, setCelebrityMatch] = useState<IImageDoc | null>(null)
     const [otherMatches, setOtherMatches] = useState<IImageDoc[]>([])
-    const [searchError, setSearchError] = useState<string | null>(null)
 
     return (
         <AppContext.Provider value={{
@@ -34,9 +31,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             celebrityMatch,
             setCelebrityMatch,
             otherMatches,
-            setOtherMatches,
-            searchError,
-            setSearchError
+            setOtherMatches
         }}>
             {children}
         </AppContext.Provider>

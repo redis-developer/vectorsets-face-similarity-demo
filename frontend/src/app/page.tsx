@@ -13,8 +13,7 @@ function HomeContent() {
         setSelectedImage,
         setIsSearching,
         setCelebrityMatch,
-        setOtherMatches,
-        setSearchError
+        setOtherMatches
     } = useAppContext()
 
     const handleImageSelect = async (image: IImageDoc) => {
@@ -29,7 +28,6 @@ function HomeContent() {
 
     const performSearch = async (image: IImageDoc, isNewElement: boolean) => {
         setIsSearching(true)
-        setSearchError(null)
         setCelebrityMatch(null)
         setOtherMatches([])
 
@@ -55,13 +53,10 @@ function HomeContent() {
                 setCelebrityMatch(response.data[0])
                 // Remaining results go to other matches
                 setOtherMatches(response.data.slice(1))
-            } else {
-                setSearchError(response.error || 'No matches found')
             }
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Search failed'
-            setSearchError(errorMessage)
-            console.error('Search error:', error)
+            // API utility handles all error toasts, just log for debugging
+            console.error('Unexpected error in performSearch:', error)
         } finally {
             setIsSearching(false)
         }

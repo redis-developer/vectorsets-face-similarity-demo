@@ -8,8 +8,6 @@ import { getSampleImages } from '@/utils/api';
 import type { IImageDoc } from '@/types';
 import { MAX_UPLOAD_FILE_SIZE } from '@/utils/config';
 
-
-
 type Props = {
     width?: number | string;
     onImageSelect?: (image: IImageDoc) => void;
@@ -27,25 +25,20 @@ const LeftSidePanel: React.FC<Props> = ({
     const [uploadedImage, setUploadedImage] = useState<IImageDoc | null>(null);
     const [availableImages, setAvailableImages] = useState<IImageDoc[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         const fetchImages = async () => {
             setLoading(true);
-            setError(null);
 
             try {
                 const response = await getSampleImages();
                 if (response.data) {
                     setAvailableImages(response.data);
-                } else {
-                    setError(response.error || 'Failed to fetch images');
                 }
             } catch (err) {
-                const errMsg = "An error occurred while fetching images";
-                setError(errMsg);
-                console.error(errMsg, err);
+                // API utility handles all error toasts, just log for debugging
+                console.error('Unexpected error in fetchImages:', err);
             } finally {
                 setLoading(false);
             }
