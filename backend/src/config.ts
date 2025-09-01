@@ -39,7 +39,7 @@ const getConfig = () => {
     UPLOAD_DIR: process.env.UPLOAD_DIR || "uploads",
     UPLOAD_MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
 
-    CURRENT_DATASET: DATASET_NAMES.VSET_TMDB as DatasetNameType,
+    CURRENT_DATASET: DATASET_NAMES.VSET_CELEB as DatasetNameType,
     DATASETS: DATASETS,
   };
 };

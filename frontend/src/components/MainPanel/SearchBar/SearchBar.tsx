@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import type { SearchFormData } from '@/types'
+
+import React from 'react'
 import styles from './SearchBar.module.scss'
+import { useAppContext } from '@/contexts/AppContext'
 
 export interface NumberTypeOptions {
     min?: number;
@@ -27,9 +30,6 @@ export interface InputField {
     width?: string; // e.g., '100%', '200px', '50%', '2fr', etc.
 }
 
-export interface SearchFormData {
-    [key: string]: string | number;
-}
 
 interface SearchBarProps {
     inputFields: InputField[];
@@ -81,14 +81,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     rowConfig,
     mode = 'manual'
 }) => {
-    const [formData, setFormData] = useState<SearchFormData>({})
+    const { searchFormData, setSearchFormData } = useAppContext()
 
     const handleInputChange = (fieldName: string, value: string | number) => {
-        const newFormData = {
-            ...formData,
+        const newFormData: SearchFormData = {
+            ...searchFormData,
             [fieldName]: value
         }
-        setFormData(newFormData)
+        setSearchFormData(newFormData)
 
         // Auto-search if mode is 'auto'
         if (mode === 'auto') {
@@ -101,11 +101,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        onSearch(formData)
+        onSearch(searchFormData)
     }
 
     const handleClear = () => {
-        setFormData({})
+        setSearchFormData({})
         onClear?.()
 
         // Auto-search with empty data if mode is 'auto'
@@ -130,7 +130,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         max={options.max}
                         step={options.step}
                         placeholder={options.placeholder}
-                        value={formData[fieldName] || ''}
+                        value={searchFormData[fieldName] || ''}
                         onChange={(e) => handleInputChange(fieldName, Number(e.target.value))}
                         className={styles.input}
                     />
@@ -141,7 +141,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 const options = field.typeOptions as SelectTypeOptions
                 return (
                     <select
-                        value={formData[fieldName] || ''}
+                        value={searchFormData[fieldName] || ''}
                         onChange={(e) => handleInputChange(fieldName, e.target.value)}
                         className={styles.select}
                     >
@@ -161,7 +161,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     <input
                         type="text"
                         placeholder={options.placeholder}
-                        value={formData[fieldName] || ''}
+                        value={searchFormData[fieldName] || ''}
                         onChange={(e) => handleInputChange(fieldName, e.target.value)}
                         className={styles.input}
                     />

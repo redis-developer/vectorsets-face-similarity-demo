@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, ReactNode } from 'react'
-import type { IImageDoc } from '@/types'
+import type { IImageDoc, SearchFormData } from '@/types'
 
 // Context
 const AppContext = createContext<{
@@ -13,6 +13,8 @@ const AppContext = createContext<{
     setCelebrityMatch: (match: IImageDoc | null) => void
     otherMatches: IImageDoc[]
     setOtherMatches: (matches: IImageDoc[]) => void
+    searchFormData: SearchFormData
+    setSearchFormData: (data: SearchFormData) => void
 } | null>(null)
 
 // Provider
@@ -21,6 +23,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [selectedImage, setSelectedImage] = useState<IImageDoc | null>(null)
     const [celebrityMatch, setCelebrityMatch] = useState<IImageDoc | null>(null)
     const [otherMatches, setOtherMatches] = useState<IImageDoc[]>([])
+    const [searchFormData, setSearchFormData] = useState<SearchFormData>({})
 
     return (
         <AppContext.Provider value={{
@@ -31,7 +34,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
             celebrityMatch,
             setCelebrityMatch,
             otherMatches,
-            setOtherMatches
+            setOtherMatches,
+            searchFormData,
+            setSearchFormData
         }}>
             {children}
         </AppContext.Provider>

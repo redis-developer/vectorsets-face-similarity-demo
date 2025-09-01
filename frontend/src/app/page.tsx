@@ -1,6 +1,5 @@
 'use client'
-import type { IApiResponse, IImageDoc } from '@/types'
-import type { SearchFormData } from '@/components/MainPanel/SearchBar/SearchBar'
+import type { IApiResponse, IImageDoc, SearchFormData } from '@/types'
 
 import { AppProvider, useAppContext } from '@/contexts/AppContext'
 import LeftSidePanel from '@/components/LeftSidePanel/LeftSidePanel'
@@ -34,7 +33,9 @@ function HomeContent() {
         setSelectedImage,
         setIsSearching,
         setCelebrityMatch,
-        setOtherMatches
+        setOtherMatches,
+        searchFormData,
+        setSearchFormData
     } = useAppContext()
 
     const handleImage = async (image: IImageDoc) => {
@@ -51,7 +52,8 @@ function HomeContent() {
         try {
             let response: IApiResponse<IImageDoc[]>;
             const resultCount = 50;
-            const filterQuery = searchData ? buildFilterQuery(searchData) : "";
+            const activeSearchData = searchData ?? searchFormData ?? {};
+            const filterQuery = activeSearchData ? buildFilterQuery(activeSearchData) : "";
 
             if (isNewElement) {
                 response = await newElementSearch({
@@ -81,6 +83,7 @@ function HomeContent() {
     }
 
     const handleSetFilters = async (searchData: SearchFormData) => {
+        setSearchFormData(searchData)
         if (selectedImage) {
             const isNewElement = selectedImage.fromUpload || false;
             await vectorSetElementSearch(selectedImage, isNewElement, searchData);
@@ -88,10 +91,10 @@ function HomeContent() {
     }
 
     const handleClearFilters = async () => {
+        setSearchFormData({})
         if (selectedImage) {
-            // Re-run search without filters
             const isNewElement = selectedImage.fromUpload || false;
-            await vectorSetElementSearch(selectedImage, isNewElement);
+            await vectorSetElementSearch(selectedImage, isNewElement, {});
         }
     }
 

@@ -34,3 +34,7 @@ export interface INewElementSearchInput {
   count: number;
   filterQuery: string;
 }
+
+export interface SearchFormData {
+  [key: string]: string | number;
+}

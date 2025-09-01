@@ -1,5 +1,19 @@
 import type { InputField } from "@/components/MainPanel/SearchBar/SearchBar";
 
+const celebInputFields: InputField[] = [
+  {
+    label: "Name Length >=",
+    name: "charCount",
+    type: "number",
+    typeOptions: {
+      min: 0,
+      max: 50,
+      step: 1,
+      placeholder: "Enter char count",
+    },
+  },
+];
+
 const tmdbInputFields: InputField[] = [
   {
     label: "Country",
@@ -52,7 +66,9 @@ const DATASET_NAMES = {
 } as const;
 
 const DATASETS_FILTERS = {
-  VSET_CELEB: {},
+  VSET_CELEB: {
+    inputFields: celebInputFields,
+  },
   VSET_TMDB: {
     inputFields: tmdbInputFields,
   },

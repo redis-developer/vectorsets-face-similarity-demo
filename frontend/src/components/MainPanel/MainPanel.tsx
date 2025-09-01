@@ -1,5 +1,4 @@
-import type { IImageDoc } from '@/types'
-import type { InputField, SearchFormData } from './SearchBar/SearchBar'
+import type { IImageDoc, SearchFormData } from '@/types'
 
 import React from 'react'
 import styles from './MainPanel.module.scss'
