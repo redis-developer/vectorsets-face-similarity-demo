@@ -1,11 +1,32 @@
 'use client'
 import type { IApiResponse, IImageDoc } from '@/types'
+import type { SearchFormData } from '@/components/MainPanel/SearchBar/SearchBar'
 
 import { AppProvider, useAppContext } from '@/contexts/AppContext'
 import LeftSidePanel from '@/components/LeftSidePanel/LeftSidePanel'
 import MainPanel from '@/components/MainPanel/MainPanel'
 import styles from './page.module.scss'
 import { existingElementSearch, newElementSearch } from '@/utils/api'
+
+const buildFilterQuery = (
+    searchData: Record<string, string | number>
+): string => {
+    const filters: string[] = [];
+
+    for (const [key, value] of Object.entries(searchData)) {
+        if (value !== "" && value !== null && value !== undefined) {
+            const fieldName = key;
+
+            if (typeof value === "string") {
+                filters.push(`.${fieldName}=="${value}"`);
+            } else if (typeof value === "number") {
+                filters.push(`.${fieldName}>=${value}`);
+            }
+        }
+    }
+
+    return filters.join(" and ");
+};
 
 function HomeContent() {
     const {
@@ -16,17 +37,13 @@ function HomeContent() {
         setOtherMatches
     } = useAppContext()
 
-    const handleImageSelect = async (image: IImageDoc) => {
+    const handleImage = async (image: IImageDoc) => {
         setSelectedImage(image)
-        await performSearch(image, false);
+        const isNewElement = image.fromUpload || false;
+        await vectorSetElementSearch(image, isNewElement);
     }
 
-    const handleImageUpload = async (image: IImageDoc) => {
-        setSelectedImage(image)
-        await performSearch(image, true);
-    }
-
-    const performSearch = async (image: IImageDoc, isNewElement: boolean) => {
+    const vectorSetElementSearch = async (image: IImageDoc, isNewElement: boolean, searchData?: SearchFormData) => {
         setIsSearching(true)
         setCelebrityMatch(null)
         setOtherMatches([])
@@ -34,41 +51,61 @@ function HomeContent() {
         try {
             let response: IApiResponse<IImageDoc[]>;
             const resultCount = 50;
+            const filterQuery = searchData ? buildFilterQuery(searchData) : "";
+
             if (isNewElement) {
                 response = await newElementSearch({
                     localImageUrl: image.src,
                     count: resultCount,
-                    filterQuery: "" // No filter for now
+                    filterQuery: filterQuery
                 })
             } else {
                 response = await existingElementSearch({
                     id: image.id,
                     count: resultCount,
-                    filterQuery: "" // No filter for now
+                    filterQuery: filterQuery
                 })
             }
 
             if (response.data && response.data.length > 0) {
-                // First result goes to celebrity match
+                // First result goes to nearest match
                 setCelebrityMatch(response.data[0])
                 // Remaining results go to other matches
                 setOtherMatches(response.data.slice(1))
             }
         } catch (error) {
-            // API utility handles all error toasts, just log for debugging
             console.error('Unexpected error in performSearch:', error)
         } finally {
             setIsSearching(false)
         }
     }
 
+    const handleSetFilters = async (searchData: SearchFormData) => {
+        if (selectedImage) {
+            const isNewElement = selectedImage.fromUpload || false;
+            await vectorSetElementSearch(selectedImage, isNewElement, searchData);
+        }
+    }
+
+    const handleClearFilters = async () => {
+        if (selectedImage) {
+            // Re-run search without filters
+            const isNewElement = selectedImage.fromUpload || false;
+            await vectorSetElementSearch(selectedImage, isNewElement);
+        }
+    }
+
     return (
         <main className={styles.main}>
             <LeftSidePanel
-                onImageSelect={handleImageSelect}
-                onImageUpload={handleImageUpload}
+                onImageSelect={handleImage}
+                onImageUpload={handleImage}
             />
-            <MainPanel selectedImage={selectedImage} />
+            <MainPanel
+                selectedImage={selectedImage}
+                onSetFilters={handleSetFilters}
+                onClearFilters={handleClearFilters}
+            />
         </main>
     )
 }

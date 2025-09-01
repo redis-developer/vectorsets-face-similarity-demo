@@ -21,6 +21,7 @@ export type TypeOptions = NumberTypeOptions | SelectTypeOptions | TextTypeOption
 
 export interface InputField {
     label: string;
+    name: string;
     type: 'number' | 'select' | 'text';
     typeOptions: TypeOptions;
     width?: string; // e.g., '100%', '200px', '50%', '2fr', etc.
@@ -117,7 +118,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const fieldRows = splitFieldsIntoRows(inputFields, rowConfig);
 
     const renderInputField = (field: InputField) => {
-        const fieldName = field.label.toLowerCase().replace(/\s+/g, '_')
+        const fieldName = field.name;
 
         switch (field.type) {
             case 'number': {

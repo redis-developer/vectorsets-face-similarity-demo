@@ -48,6 +48,7 @@ const LeftSidePanel: React.FC<Props> = ({
     }, [refreshKey]);
 
     const handleImageUpload = (image: IImageDoc) => {
+        image.fromUpload = true;
         setUploadedImage(image);
         if (onImageUpload) {
             onImageUpload(image);
@@ -55,6 +56,7 @@ const LeftSidePanel: React.FC<Props> = ({
     };
 
     const handleImageSelect = (image: IImageDoc) => {
+        image.fromUpload = false;
         if (onImageSelect) {
             onImageSelect(image);
         }
