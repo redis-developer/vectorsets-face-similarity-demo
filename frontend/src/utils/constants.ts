@@ -9,14 +9,14 @@ const celebInputFields: InputField[] = [
       min: 0,
       max: 50,
       step: 1,
-      placeholder: "Enter char count",
+      placeholder: "Enter length",
     },
   },
 ];
 
 const celebMetaDisplayFields: Record<string, string> = {
   elementId: "ID",
-  charCount: "CharCount",
+  charCount: "NameLength",
 };
 
 const tmdbInputFields: InputField[] = [
@@ -60,7 +60,7 @@ const tmdbInputFields: InputField[] = [
       min: 0,
       max: 50,
       step: 1,
-      placeholder: "Enter char count",
+      placeholder: "Enter length",
     },
   },
 ];
@@ -70,7 +70,7 @@ const tmdbMetaDisplayFields: Record<string, string> = {
   label: "Name",
   country: "Country",
   popularity: "Popularity",
-  charCount: "CharCount",
+  charCount: "NameLength",
 };
 
 const DATASET_NAMES = {
