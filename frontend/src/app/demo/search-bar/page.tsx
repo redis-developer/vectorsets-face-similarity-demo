@@ -1,7 +1,9 @@
 'use client'
+import type { SearchFormData } from '@/types'
 
 import React, { useState } from 'react'
-import SearchBar, { InputField, SearchFormData } from '@/components/MainPanel/SearchBar/SearchBar'
+import SearchBar, { InputField } from '@/components/MainPanel/SearchBar/SearchBar'
+import { AppProvider } from '@/contexts/AppContext'
 
 const SearchBarDemo: React.FC = () => {
     const [searchResults, setSearchResults] = useState<SearchFormData[]>([])
@@ -10,6 +12,7 @@ const SearchBarDemo: React.FC = () => {
     // Basic demo - 3 fields (default: 3 per row)
     const basicFields: InputField[] = [
         {
+            name: "name",
             label: "Name",
             type: "text",
             typeOptions: {
@@ -17,6 +20,7 @@ const SearchBarDemo: React.FC = () => {
             }
         },
         {
+            name: "age",
             label: "Age",
             type: "number",
             typeOptions: {
@@ -27,6 +31,7 @@ const SearchBarDemo: React.FC = () => {
             }
         },
         {
+            name: "gender",
             label: "Gender",
             type: "select",
             typeOptions: {
@@ -43,6 +48,7 @@ const SearchBarDemo: React.FC = () => {
     // Row config demo - showcasing custom row layouts
     const rowConfigDemoFields: InputField[] = [
         {
+            name: "firstName",
             label: "First Name",
             type: "text",
             typeOptions: {
@@ -51,6 +57,7 @@ const SearchBarDemo: React.FC = () => {
             //width: "100%"
         },
         {
+            name: "lastName",
             label: "Last Name",
             type: "text",
             typeOptions: {
@@ -59,6 +66,7 @@ const SearchBarDemo: React.FC = () => {
             // width: "100%"
         },
         {
+            name: "age",
             label: "Age",
             type: "number",
             typeOptions: {
@@ -70,6 +78,7 @@ const SearchBarDemo: React.FC = () => {
             width: "150px"
         },
         {
+            name: "gender",
             label: "Gender",
             type: "select",
             typeOptions: {
@@ -83,6 +92,7 @@ const SearchBarDemo: React.FC = () => {
             width: "120px"
         },
         {
+            name: "email",
             label: "Email",
             type: "text",
             typeOptions: {
@@ -91,6 +101,7 @@ const SearchBarDemo: React.FC = () => {
             width: "70%"
         },
         {
+            name: "phone",
             label: "Phone",
             type: "text",
             typeOptions: {
@@ -99,6 +110,7 @@ const SearchBarDemo: React.FC = () => {
             width: "28%"
         },
         {
+            name: "country",
             label: "Country",
             type: "select",
             typeOptions: {
@@ -112,6 +124,7 @@ const SearchBarDemo: React.FC = () => {
             width: "150px"
         },
         {
+            name: "city",
             label: "City",
             type: "text",
             typeOptions: {
@@ -120,6 +133,7 @@ const SearchBarDemo: React.FC = () => {
             width: "200px"
         },
         {
+            name: "profession",
             label: "Profession",
             type: "select",
             typeOptions: {
@@ -295,4 +309,12 @@ const SearchBarDemo: React.FC = () => {
     )
 }
 
-export default SearchBarDemo
+const SearchBarDemoPage = () => {
+    return (
+        <AppProvider>
+            <SearchBarDemo />
+        </AppProvider>
+    )
+}
+
+export default SearchBarDemoPage

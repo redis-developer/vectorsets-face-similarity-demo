@@ -37,6 +37,7 @@ interface SearchBarProps {
     onClear?: () => void;
     rowConfig?: number[]; // New prop for row configuration
     mode?: 'manual' | 'auto'; // New prop for search mode
+    labelPosition?: 'top' | 'left'; // New prop for label position
 }
 
 const MAX_FIELDS_PER_ROW = 3;
@@ -79,7 +80,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
     onSearch,
     onClear,
     rowConfig,
-    mode = 'manual'
+    mode = 'manual',
+    labelPosition = 'top'
 }) => {
     const { searchFormData, setSearchFormData } = useAppContext()
 
@@ -185,6 +187,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                                     className={styles.fieldGroup}
                                     style={field.width ? { width: field.width } : undefined}
                                     data-width={field.width ? 'true' : undefined}
+                                    data-label-position={labelPosition}
                                 >
                                     <label className={styles.label}>{field.label}</label>
                                     {renderInputField(field)}

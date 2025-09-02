@@ -38,6 +38,7 @@ const MainPanel: React.FC<MainPanelProps> = ({ selectedImage, onSetFilters, onCl
                 onSearch={onSetFilters}
                 onClear={onClearFilters}
                 mode='auto'
+                labelPosition='left'
             />
             <NearestMatchResult
                 selectedImage={selectedImage}
