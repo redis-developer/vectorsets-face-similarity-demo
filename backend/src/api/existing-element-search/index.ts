@@ -47,7 +47,12 @@ const existingElementSearch = async (
     dataset.IMAGE_PREFIX
   );
 
-  return formattedResults;
+  const returnObj = {
+    query: runQuery,
+    queryResults: formattedResults,
+  };
+
+  return returnObj;
 };
 
 export { existingElementSearch };

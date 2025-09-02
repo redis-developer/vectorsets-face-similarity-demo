@@ -1,5 +1,5 @@
 'use client'
-import type { IApiResponse, IImageDoc, SearchFormData } from '@/types'
+import type { IApiResponse, IImageDoc, IVectorSetSearchResponse, SearchFormData } from '@/types'
 
 import { AppProvider, useAppContext } from '@/contexts/AppContext'
 import LeftSidePanel from '@/components/LeftSidePanel/LeftSidePanel'
@@ -35,7 +35,8 @@ function HomeContent() {
         setCelebrityMatch,
         setOtherMatches,
         searchFormData,
-        setSearchFormData
+        setSearchFormData,
+        setLastQuery
     } = useAppContext()
 
     const handleImage = async (image: IImageDoc) => {
@@ -50,7 +51,7 @@ function HomeContent() {
         setOtherMatches([])
 
         try {
-            let response: IApiResponse<IImageDoc[]>;
+            let response: IApiResponse<IVectorSetSearchResponse>;
             const resultCount = 50;
             const activeSearchData = searchData ?? searchFormData ?? {};
             const filterQuery = activeSearchData ? buildFilterQuery(activeSearchData) : "";
@@ -69,11 +70,14 @@ function HomeContent() {
                 })
             }
 
-            if (response.data && response.data.length > 0) {
+            if (response?.data?.queryResults?.length) {
+                const query = response.data.query;
+                const queryResults = response.data.queryResults;
                 // First result goes to nearest match
-                setCelebrityMatch(response.data[0])
+                setCelebrityMatch(queryResults[0])
                 // Remaining results go to other matches
-                setOtherMatches(response.data.slice(1))
+                setOtherMatches(queryResults.slice(1))
+                setLastQuery(query);
             }
         } catch (error) {
             console.error('Unexpected error in performSearch:', error)

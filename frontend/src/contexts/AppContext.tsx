@@ -15,6 +15,8 @@ const AppContext = createContext<{
     setOtherMatches: (matches: IImageDoc[]) => void
     searchFormData: SearchFormData
     setSearchFormData: (data: SearchFormData) => void
+    lastQuery: string
+    setLastQuery: (query: string) => void
 } | null>(null)
 
 // Provider
@@ -24,6 +26,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [celebrityMatch, setCelebrityMatch] = useState<IImageDoc | null>(null)
     const [otherMatches, setOtherMatches] = useState<IImageDoc[]>([])
     const [searchFormData, setSearchFormData] = useState<SearchFormData>({})
+    const [lastQuery, setLastQuery] = useState<string>('')
 
     return (
         <AppContext.Provider value={{
@@ -36,7 +39,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
             otherMatches,
             setOtherMatches,
             searchFormData,
-            setSearchFormData
+            setSearchFormData,
+            lastQuery,
+            setLastQuery
         }}>
             {children}
         </AppContext.Provider>

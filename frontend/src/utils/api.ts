@@ -4,6 +4,7 @@ import {
   IImageDoc,
   IExistingElementSearchInput,
   INewElementSearchInput,
+  IVectorSetSearchResponse,
 } from "@/types";
 
 import { API_BASE_URL, CURRENT_DATASET } from "./config";
@@ -153,25 +154,25 @@ const getSampleImages = async () => {
 };
 
 const existingElementSearch = async (input: IExistingElementSearchInput) => {
-  const response = await apiPost<IImageDoc[]>(
+  const response = await apiPost<IVectorSetSearchResponse>(
     ENDPOINTS.EXISTING_ELEMENT_SEARCH,
     input
   );
   if (response?.data) {
-    const fixedImages = fixImageURLs(response.data);
-    response.data = fixImageMeta(fixedImages);
+    const fixedImages = fixImageURLs(response.data.queryResults);
+    response.data.queryResults = fixImageMeta(fixedImages);
   }
   return response;
 };
 
 const newElementSearch = async (input: INewElementSearchInput) => {
-  const response = await apiPost<IImageDoc[]>(
+  const response = await apiPost<IVectorSetSearchResponse>(
     ENDPOINTS.NEW_ELEMENT_SEARCH,
     input
   );
   if (response?.data) {
-    const fixedImages = fixImageURLs(response.data);
-    response.data = fixImageMeta(fixedImages);
+    const fixedImages = fixImageURLs(response.data.queryResults);
+    response.data.queryResults = fixImageMeta(fixedImages);
   }
   return response;
 };

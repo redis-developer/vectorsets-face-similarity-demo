@@ -35,7 +35,18 @@ const buildQuery = async (
   const imageEmbeddingsStr = imageEmbeddings
     .map((val) => val.toString())
     .join(" ");
-  return `VSIM '${keyPrefix}' VALUES ${DIM} ${imageEmbeddingsStr} WITHSCORES WITHATTRIBS ${filterQuery} COUNT ${input.count}`;
+
+  const query = `VSIM '${keyPrefix}' VALUES ${DIM} ${imageEmbeddingsStr} WITHSCORES WITHATTRIBS ${filterQuery} COUNT ${input.count}`;
+
+  //--------------------------------
+  const imageEmbeddingsSampleStr = imageEmbeddings
+    .slice(0, 3)
+    .map((val) => val.toString())
+    .join(" ");
+  const sampleQuery = `VSIM '${keyPrefix}' VALUES ${DIM} ${imageEmbeddingsSampleStr} WITHSCORES WITHATTRIBS ${filterQuery} COUNT ${input.count}`;
+  //--------------------------------
+
+  return { query, sampleQuery };
 };
 
 const newElementSearch = async (
@@ -47,8 +58,8 @@ const newElementSearch = async (
   const dataset = config.DATASETS[config.CURRENT_DATASET];
 
   const redisWrapperST = RedisWrapperST.getInstance();
-  let runQuery = await buildQuery(vInput);
-  const results = (await redisWrapperST.rawCommandExecute(runQuery)) as any[];
+  const { query, sampleQuery } = await buildQuery(vInput);
+  const results = (await redisWrapperST.rawCommandExecute(query)) as any[];
   const objectResults = convertVectorSetSearchResultsToObjectArr(results);
 
   const formattedResults: IImageDoc[] = formatImageResults(
@@ -56,7 +67,12 @@ const newElementSearch = async (
     dataset.IMAGE_PREFIX
   );
 
-  return formattedResults;
+  const returnObj = {
+    query: sampleQuery, //query is large so we use sampleQuery to display in UI
+    queryResults: formattedResults,
+  };
+
+  return returnObj;
 };
 
 export { newElementSearch };

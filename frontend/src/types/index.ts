@@ -39,3 +39,8 @@ export interface INewElementSearchInput {
 export interface SearchFormData {
   [key: string]: string | number;
 }
+
+export interface IVectorSetSearchResponse {
+  query: string;
+  queryResults: IImageDoc[];
+}
