@@ -2,6 +2,7 @@
 const nextConfig = {
     output: 'standalone',
     images: {
+        unoptimized: true, // Disable image optimization for external images
         remotePatterns: [
             {
                 protocol: 'http',
