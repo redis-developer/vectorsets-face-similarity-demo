@@ -18,7 +18,7 @@ const buildFilterQuery = (
 
             if (typeof value === "string") {
                 filters.push(`.${fieldName}=="${value}"`);
-            } else if (typeof value === "number") {
+            } else if (typeof value === "number" && value) {
                 filters.push(`.${fieldName}>=${value}`);
             }
         }

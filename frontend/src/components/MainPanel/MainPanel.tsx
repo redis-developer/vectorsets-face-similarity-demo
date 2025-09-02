@@ -4,6 +4,7 @@ import React from 'react'
 import styles from './MainPanel.module.scss'
 import Header from './Header/Header'
 import SearchBar from './SearchBar/SearchBar'
+import DatabaseQuery from './DatabaseQuery/DatabaseQuery'
 import NearestMatchResult from './NearestMatchResult/NearestMatchResult'
 import OtherMatchResults from './OtherMatchResults/OtherMatchResults'
 import { useAppContext } from '@/contexts/AppContext'
@@ -40,6 +41,7 @@ const MainPanel: React.FC<MainPanelProps> = ({ selectedImage, onSetFilters, onCl
                 mode='auto'
                 labelPosition='left'
             />
+            <DatabaseQuery />
             <NearestMatchResult
                 selectedImage={selectedImage}
                 celebrityMatch={celebrityMatch}
