@@ -7,7 +7,7 @@ import {
   IVectorSetSearchResponse,
 } from "@/types";
 
-import { API_BASE_URL, CURRENT_DATASET } from "./config";
+import { API_BASE_URL, IMAGE_BASE_URL, CURRENT_DATASET } from "./config";
 import { DATASETS_FILTERS } from "./constants";
 import { showErrorToast } from "./toast";
 
@@ -79,7 +79,7 @@ const fixImageURLs = (images: IImageDoc[]) => {
     ...image,
     src: image.src.startsWith("http")
       ? image.src
-      : `${API_BASE_URL}${image.src}`,
+      : `${IMAGE_BASE_URL}${image.src}`,
   }));
 };
 

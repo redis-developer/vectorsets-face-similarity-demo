@@ -1,11 +1,18 @@
 # Single Dockerfile for both development and production
-FROM node:20-alpine
+FROM node:20-bookworm
 
 # Set working directory
 WORKDIR /app
 
+# Create non-root user for production
+RUN if [ "$NODE_ENV" = "production" ]; then \
+      addgroup --system --gid 1001 nodejs && \
+      adduser --system --uid 1001 nodejs && \
+      USER nodejs; \
+    fi
+
 # Copy package files
-COPY package*.json ./
+COPY --chown=nodejs:nodejs package*.json ./
 
 # Install dependencies (all for dev, production-only for prod)
 ARG NODE_ENV=production
@@ -16,7 +23,7 @@ RUN if [ "$NODE_ENV" = "production" ]; then \
     fi
 
 # Copy source code
-COPY . .
+COPY --chown=nodejs:nodejs . .
 
 # Build for production if needed
 RUN if [ "$NODE_ENV" = "production" ]; then \
@@ -25,14 +32,6 @@ RUN if [ "$NODE_ENV" = "production" ]; then \
 
 # Create uploads directory
 RUN mkdir -p uploads
-
-# Create non-root user for production
-RUN if [ "$NODE_ENV" = "production" ]; then \
-      addgroup -g 1001 -S nodejs && \
-      adduser -S nodejs -u 1001 && \
-      chown -R nodejs:nodejs /app && \
-      USER nodejs; \
-    fi
 
 # Expose port
 EXPOSE 3001

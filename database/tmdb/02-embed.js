@@ -1,5 +1,5 @@
 // embed-clip.js
-import { env, AutoProcessor, CLIPVisionModelWithProjection, RawImage } from "@xenova/transformers";
+import { env, AutoProcessor, CLIPVisionModelWithProjection, RawImage } from "@huggingface/transformers";
 import fs from "fs";
 import path from "path";
 import readline from "readline";

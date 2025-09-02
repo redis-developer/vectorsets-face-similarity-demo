@@ -3,7 +3,7 @@ import {
   CLIPVisionModelWithProjection,
   RawImage,
   env,
-} from "@xenova/transformers";
+} from "@huggingface/transformers";
 import { resolveRemoteImagePath } from "../common/index.js";
 
 // Configure transformers.js
