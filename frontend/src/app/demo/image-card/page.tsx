@@ -2,13 +2,12 @@
 
 import React, { useMemo, useState } from "react";
 import ImageCard from "@/components/shared/ImageCard/ImageCard";
-import type { ImageDoc } from "@/types";
-
+import type { IImageDoc } from "@/types";
 
 export default function ImageCardDemoPage() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
-    const images: ImageDoc[] = useMemo(
+    const images: IImageDoc[] = useMemo(
         () => [
             { id: "1", name: "", src: "/images/00000_Aaron_Eckhart.jpg" },
             { id: "2", name: "Aaron Paul", src: "/images/00018_Aaron_Paul.jpg" },
