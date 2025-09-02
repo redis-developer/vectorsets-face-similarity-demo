@@ -14,6 +14,11 @@ const celebInputFields: InputField[] = [
   },
 ];
 
+const celebMetaDisplayFields: Record<string, string> = {
+  elementId: "ID",
+  charCount: "CharCount",
+};
+
 const tmdbInputFields: InputField[] = [
   {
     label: "Country",
@@ -60,6 +65,14 @@ const tmdbInputFields: InputField[] = [
   },
 ];
 
+const tmdbMetaDisplayFields: Record<string, string> = {
+  elementId: "ID",
+  label: "Name",
+  country: "Country",
+  popularity: "Popularity",
+  charCount: "CharCount",
+};
+
 const DATASET_NAMES = {
   VSET_CELEB: "VSET_CELEB",
   VSET_TMDB: "VSET_TMDB",
@@ -68,9 +81,11 @@ const DATASET_NAMES = {
 const DATASETS_FILTERS = {
   VSET_CELEB: {
     inputFields: celebInputFields,
+    metaDisplayFields: celebMetaDisplayFields,
   },
   VSET_TMDB: {
     inputFields: tmdbInputFields,
+    metaDisplayFields: tmdbMetaDisplayFields,
   },
 } as const;
 

@@ -7,6 +7,7 @@ export interface IImageDoc {
   meta?: {
     [key: string]: any;
   };
+  score?: number;
 }
 
 export interface IDataset {

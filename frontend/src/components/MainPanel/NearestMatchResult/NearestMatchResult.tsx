@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './NearestMatchResult.module.scss'
 import ImageCard from '@/components/shared/ImageCard/ImageCard'
+import ImageDetailCard from '@/components/shared/ImageDetailCard/ImageDetailCard'
 import MatchingProgress from '@/components/shared/MatchingProgress/MatchingProgress'
 import type { IImageDoc } from '@/types'
 
@@ -41,9 +42,9 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                         <div className={styles.celebrityName}>
                             {celebrityMatch.label}
                         </div>
-                        {celebrityMatch.meta?.score !== undefined && (
+                        {celebrityMatch.score !== undefined && (
                             <div className={styles.matchScore}>
-                                Score: {celebrityMatch.meta.score}
+                                Score: {celebrityMatch.score}
                             </div>
                         )}
                     </div>
@@ -54,10 +55,12 @@ const NearestMatchResult: React.FC<NearestMatchResultProps> = ({
                 <label className={styles.sectionLabel}>Best Match</label>
                 <div className={styles.imageContainer}>
                     {celebrityMatch ? (
-                        <ImageCard
+                        <ImageDetailCard
                             image={celebrityMatch}
                             width={160}
                             showLabel={false}
+                            expandable={true}
+                            defaultExpanded={false}
                         />
                     ) : (
                         <div className={styles.emptyImagePlaceholder}>

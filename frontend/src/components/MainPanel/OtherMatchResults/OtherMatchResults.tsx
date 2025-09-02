@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './OtherMatchResults.module.scss'
-import ImageCard from '@/components/shared/ImageCard/ImageCard'
+import ImageDetailCard from '@/components/shared/ImageDetailCard/ImageDetailCard'
 import type { IImageDoc } from '@/types'
 
 interface OtherMatchResultsProps {
@@ -16,7 +16,7 @@ const OtherMatchResults: React.FC<OtherMatchResultsProps> = ({
             <div className={styles.matchesContainer}>
                 {otherMatches.length > 0 ? (
                     otherMatches.map((match, index) => (
-                        <ImageCard
+                        <ImageDetailCard
                             key={`${match.id || index}`}
                             image={match}
                             width={130}

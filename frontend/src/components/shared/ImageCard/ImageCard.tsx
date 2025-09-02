@@ -22,7 +22,7 @@ const ImageCard: React.FC<Props> = ({
 
     // Calculate content height based on whether we have label and/or score
     const hasLabel = image.label && showLabel;
-    const hasScore = image.meta?.score !== undefined && showLabel;
+    const hasScore = image.score !== undefined && showLabel;
     const hasBoth = hasLabel && hasScore;
 
     const calculateImageHeight = (cardWidth: number, hasLabel: boolean, hasScore: boolean): number => {
@@ -82,7 +82,7 @@ const ImageCard: React.FC<Props> = ({
                     )}
                     {hasScore && (
                         <div className={styles.score}>
-                            Score: {image.meta!.score}
+                            Score: {image.score}
                         </div>
                     )}
                 </div>

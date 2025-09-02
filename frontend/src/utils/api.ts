@@ -6,7 +6,8 @@ import {
   INewElementSearchInput,
 } from "@/types";
 
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL, CURRENT_DATASET } from "./config";
+import { DATASETS_FILTERS } from "./constants";
 import { showErrorToast } from "./toast";
 
 const ENDPOINTS = {
@@ -81,6 +82,30 @@ const fixImageURLs = (images: IImageDoc[]) => {
   }));
 };
 
+const fixImageMeta = (images: IImageDoc[]) => {
+  const datasetFilters = DATASETS_FILTERS[CURRENT_DATASET];
+  const metaDisplayFields = datasetFilters?.metaDisplayFields || {};
+
+  const retImages = images.map((image) => {
+    let filteredMeta: Record<string, any> = {};
+
+    if (image.meta) {
+      for (const [key, value] of Object.entries(image.meta)) {
+        if (key in metaDisplayFields) {
+          const displayKey = metaDisplayFields[key];
+          filteredMeta[displayKey] = value;
+        }
+      }
+    }
+
+    return {
+      ...image,
+      meta: filteredMeta,
+    };
+  });
+  return retImages;
+};
+
 //--------------------------------
 
 const apiImageUpload = async (
@@ -120,7 +145,8 @@ const getSampleImages = async () => {
   const response = await apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
 
   if (response?.data) {
-    response.data = fixImageURLs(response.data);
+    const fixedImages = fixImageURLs(response.data);
+    response.data = fixImageMeta(fixedImages);
   }
 
   return response;
@@ -132,7 +158,8 @@ const existingElementSearch = async (input: IExistingElementSearchInput) => {
     input
   );
   if (response?.data) {
-    response.data = fixImageURLs(response.data);
+    const fixedImages = fixImageURLs(response.data);
+    response.data = fixImageMeta(fixedImages);
   }
   return response;
 };
@@ -143,7 +170,8 @@ const newElementSearch = async (input: INewElementSearchInput) => {
     input
   );
   if (response?.data) {
-    response.data = fixImageURLs(response.data);
+    const fixedImages = fixImageURLs(response.data);
+    response.data = fixImageMeta(fixedImages);
   }
   return response;
 };

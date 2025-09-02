@@ -53,6 +53,7 @@ const formatImageResults = (results: any[], imagePrefix: string) => {
         id: res.elementId,
         src: `${imagePrefix}${res.imagePath}`,
         label: res.label,
+        score: res.score,
         meta: res,
       });
     }
