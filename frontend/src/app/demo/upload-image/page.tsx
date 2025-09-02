@@ -2,11 +2,11 @@
 
 import UploadImage from "@/components/shared/UploadImage/UploadImage";
 import { useState } from "react";
-import type { ImageDoc } from "@/types";
+import type { IImageDoc } from "@/types";
 import Image from "next/image";
 
 export default function UploadImagePage() {
-    const [uploaded, setUploaded] = useState<ImageDoc>();
+    const [uploaded, setUploaded] = useState<IImageDoc>();
     const fileSizeMax = 1 * 1024 * 1024; // 1MB
     return (
         <div style={{ padding: "20px" }}>
