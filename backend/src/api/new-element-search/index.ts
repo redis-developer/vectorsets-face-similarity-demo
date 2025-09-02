@@ -43,7 +43,9 @@ const buildQuery = async (
     .slice(0, 3)
     .map((val) => val.toString())
     .join(" ");
-  const sampleQuery = `VSIM '${keyPrefix}' VALUES ${DIM} ${imageEmbeddingsSampleStr} WITHSCORES WITHATTRIBS ${filterQuery} COUNT ${input.count}`;
+  const sampleQuery = `VSIM '${keyPrefix}' VALUES ${DIM} ${
+    imageEmbeddingsSampleStr + "..."
+  } WITHSCORES WITHATTRIBS ${filterQuery} COUNT ${input.count}`;
   //--------------------------------
 
   return { query, sampleQuery };

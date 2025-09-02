@@ -39,36 +39,6 @@ function formatRedisCommand(args) {
 }
 
 // -------- Country extraction function ----------
-function getCountry(placeOfBirth) {
-    if (!placeOfBirth || placeOfBirth.trim() === '') {
-        return null;
-    }
-
-    // Clean up the input
-    let cleaned = placeOfBirth.trim();
-
-    // Remove trailing periods and spaces
-    cleaned = cleaned.replace(/\.$/, '').trim();
-
-    // Handle dash-separated entries
-    if (cleaned.includes(' - ')) {
-        const parts = cleaned.split(' - ');
-        const lastPart = parts[parts.length - 1].trim();
-        return cleanCountryName(lastPart);
-    }
-
-    // Handle comma-separated entries (including Chinese comma ，)
-    if (cleaned.includes(',') || cleaned.includes('，')) {
-        // Split by both regular comma and Chinese comma
-        const parts = cleaned.split(/[,，]/).map(part => part.trim());
-        const lastPart = parts[parts.length - 1];
-        return cleanCountryName(lastPart);
-    }
-
-    // Single entry (likely just a country)
-    return cleanCountryName(cleaned);
-}
-
 function cleanCountryName(country) {
     if (!country) return null;
 
@@ -90,6 +60,237 @@ function cleanCountryName(country) {
         .toUpperCase();
 }
 
+function mapCountryToStandard(country) {
+    if (!country) return null;
+
+    // Country name mapping to standardize variations
+    const countryMap = {
+        // United States variations
+        'UNITED_STATES': 'UNITED_STATES',
+        'UNITED_STATES_OF_AMERICA': 'UNITED_STATES',
+        'US': 'UNITED_STATES',
+        'USA': 'UNITED_STATES',
+        'AMERICA': 'UNITED_STATES',
+        'EEUU': 'UNITED_STATES',
+        'STATI_UNITI': 'UNITED_STATES',
+        // State abbreviations and state names
+        'CA': 'UNITED_STATES',
+        'DC': 'UNITED_STATES',
+        'IL': 'UNITED_STATES',
+        'NM': 'UNITED_STATES',
+        'NY': 'UNITED_STATES',
+        'OH': 'UNITED_STATES',
+        'TX': 'UNITED_STATES',
+        'WA': 'UNITED_STATES',
+        'CALIFORNIA_USA': 'UNITED_STATES',
+        'MICHIGAN_UNITED_STATES': 'UNITED_STATES',
+        'NEW_YORK_USA': 'UNITED_STATES',
+        'OREGON_USA': 'UNITED_STATES',
+        'VIRGINIA_US': 'UNITED_STATES',
+        'GEORGIA_USA': 'UNITED_STATES',
+        'COLORADO': 'UNITED_STATES',
+        'IDAHO': 'UNITED_STATES',
+        'ILLINOIS': 'UNITED_STATES',
+        'MAINE': 'UNITED_STATES',
+        'NORTH_CAROLINA': 'UNITED_STATES',
+        'OKLAHOMA': 'UNITED_STATES',
+        'PENNSYLVANIA': 'UNITED_STATES',
+        'TENNESSEE': 'UNITED_STATES',
+        'TEXAS': 'UNITED_STATES',
+        'VERMONT': 'UNITED_STATES',
+        'VIRGINIA': 'UNITED_STATES',
+        'NEW_YORK_CITY': 'UNITED_STATES',
+        'NEW_JERSEY': 'UNITED_STATES',
+        'ALBERTA': 'CANADA',
+        'ONTARIO': 'CANADA',
+        'WESTERN_AUSTRALIA': 'AUSTRALIA',
+
+        // United Kingdom variations
+        'UNITED_KINGDOM': 'UNITED_KINGDOM',
+        'UK': 'UNITED_KINGDOM',
+        'GREAT_BRITAIN': 'UNITED_KINGDOM',
+        'ENGLAND': 'UNITED_KINGDOM',
+        'ENGLAND_UK': 'UNITED_KINGDOM',
+        'SCOTLAND': 'UNITED_KINGDOM',
+        'WALES': 'UNITED_KINGDOM',
+        'NORTHERN_IRELAND': 'UNITED_KINGDOM',
+        'REGNO_UNITO': 'UNITED_KINGDOM',
+        'BRITISH_CROWN_COLONY': 'UNITED_KINGDOM',
+        'BRITISH_COLUMBIA': 'CANADA',
+        'LONDON': 'UNITED_KINGDOM',
+        'LONDRA': 'UNITED_KINGDOM',
+        'CAMBRIDGESHIRE': 'UNITED_KINGDOM',
+        'SOUTH_YORKSHIRE': 'UNITED_KINGDOM',
+        'DUNGARVEN-WATERFORD-IRELAND': 'IRELAND',
+
+        // Soviet Union variations
+        'USSR': 'SOVIET_UNION',
+        'SOVIET_UNION': 'SOVIET_UNION',
+        'RUSSIAN_EMPIRE_NOW_RUSSIA': 'RUSSIA',
+        'USSR_NOW_RUSSIA': 'RUSSIA',
+        'USSR_RUSSIA': 'RUSSIA',
+        'USSR_NOW_UKRAINE': 'UKRAINE',
+        'USSR_NOW_ARMENIA': 'ARMENIA',
+        'USSR_NOW_ESTONIA': 'ESTONIA',
+        'USSR_NOW_LITHUANIA': 'LITHUANIA',
+        'USSR_NOW_UZBEKISTAN': 'UZBEKISTAN',
+        'USSR_KAZAKHSTAN': 'KAZAKHSTAN',
+        'USSR_(KAZAKHSTAN)': 'KAZAKHSTAN',
+        'USSR_(NOW_RUSSIA)': 'RUSSIA',
+        'USSR_(RUSSIA)': 'RUSSIA',
+        'USSR_[NOW_ARMENIA]': 'ARMENIA',
+        'USSR_[NOW_ESTONIA]': 'ESTONIA',
+        'USSR_[NOW_LITHUANIA]': 'LITHUANIA',
+        'USSR_[NOW_RUSSIA]': 'RUSSIA',
+        'USSR_[NOW_UKRAINE]': 'UKRAINE',
+        'USSR_[NOW_UZBEKISTAN]': 'UZBEKISTAN',
+
+        // Yugoslavia variations
+        'YUGOSLAVIA': 'YUGOSLAVIA',
+        'KINGDOM_OF_YUGOSLAVIA': 'YUGOSLAVIA',
+        'SFR_YUGOSLAVIA': 'YUGOSLAVIA',
+        'SFR_YUGOSLAVIA_(NOW_CROATIA)': 'CROATIA',
+        'YUGOSLAVIA_NOW_SERBIA': 'SERBIA',
+        'YUGOSLAVIA_NOW_CROATIA': 'CROATIA',
+        'YUGOSLAVIA_(NOW_SERBIA)': 'SERBIA',
+        'YUGOSLAVIA_[NOW_SERBIA]': 'SERBIA',
+
+        // Czechoslovakia variations
+        'CZECHOSLOVAKIA': 'CZECHOSLOVAKIA',
+        'CZECHOSLOVAKIA_NOW_SLOVAKIA': 'SLOVAKIA',
+        'CZECHOSLOVAKIA_(NOW_SLOVAKIA)': 'SLOVAKIA',
+        'CZECHOSLOVAKIA_(PRESENT-DAY_CZECH_REPUBLIC)': 'CZECH_REPUBLIC',
+        'CZECHOSLOVAKIA_[NOW_SLOVAKIA]': 'SLOVAKIA',
+        'CZECH_REPUBLIC]': 'CZECH_REPUBLIC',
+        'ČESKOSLOVENSKO': 'CZECHOSLOVAKIA',
+
+        // Austria-Hungary variations
+        'AUSTRIA-HUNGARY': 'AUSTRIA-HUNGARY',
+        'AUSTRIA-HUNGARY_(NOW_SLOVAKIA)': 'SLOVAKIA',
+
+        // Other common variations
+        'FRANCE_NOW_ALGERIA': 'ALGERIA',
+        'FRANCE_[NOW_ALGERIA]': 'ALGERIA',
+        'PALESTINE_(NOW_ISRAEL)': 'ISRAEL',
+        'PALESTINE_MANDATE': 'ISRAEL',
+        'KOREAN_EMPIRE_NOW_DEMOCRATIC_PEOPLES_REPUBLIC_OF_KOREA': 'NORTH_KOREA',
+        'KINGDOM_OF_BULGARIA_[NOW_BULGARIA]': 'BULGARIA',
+        'PEOPLES_REPUBLIC_OF_CHINA': 'CHINA',
+        'REPUBLIC_OF_GEORGIA': 'GEORGIA',
+        'REPUBLIC_OF_IRELAND': 'IRELAND',
+        'SOUTH_AFRICAN_REPUBLIC': 'SOUTH_AFRICA',
+        'AFRIQUE_DU_SUD': 'SOUTH_AFRICA',
+        'BIELORUSSIA': 'BELARUS',
+        'BELGIE': 'BELGIUM',
+        'DANIMARCA': 'DENMARK',
+        'DANMARK': 'DENMARK',
+        'FRANCIA': 'FRANCE',
+        'FRANKREICH': 'GERMANY',
+        'FRANKRIKE': 'GERMANY',
+        'GERMANIA': 'GERMANY',
+        'GIAPPONE': 'JAPAN',
+        'INGLATERRA': 'ENGLAND',
+        'ISLAND': 'ICELAND',
+        'ITALIA': 'ITALY',
+        'MESSICO': 'MEXICO',
+        'MÉXICO': 'MEXICO',
+        'NORGE': 'NORWAY',
+        'POLSKA': 'POLAND',
+        'REPÚBLICA_DOMINICANA': 'DOMINICAN_REPUBLIC',
+        'TÜRKIYE': 'TURKEY',
+        'VIETNAM_NOW_HO_CHI_MINH_CITY': 'VIETNAM',
+        'VIETNAM_[NOW_HO_CHI_MINH_CITY]': 'VIETNAM',
+
+        // Additional country variations
+        'HONGKONG': 'HONG_KONG',
+        'PERÚ': 'PERU',
+        'THAILANDIA': 'THAILAND',
+        'COREA_DEL_SUD': 'SOUTH_KOREA',
+        'KASACHSTAN': 'KAZAKHSTAN',
+        'KAZAKHSTAN)': 'KAZAKHSTAN',
+        'LUXEMBURG': 'LUXEMBOURG',
+        'BRASILE': 'BRAZIL',
+        'CATANIA': 'ITALY',
+        'MILANO_(ITALY)': 'ITALY',
+        'ROMA': 'ITALY',
+        'MÜNCHEN': 'GERMANY',
+        'TOKYO': 'JAPAN',
+        'SHIGA': 'JAPAN',
+        'ZÜRICH': 'SWITZERLAND',
+        'İSTANBUL': 'TURKEY',
+        'ALGÉRIE': 'ALGERIA',
+        'CÔTE_DIVOIRE': 'IVORY_COAST',
+        'DOMINION_OF_NEW_ZEALAND': 'NEW_ZEALAND',
+        'EAST_AFRICA': 'KENYA',
+        'HEILONGJIANG_PROVINCE': 'CHINA',
+        'JAMAICA_WI': 'JAMAICA',
+        'MARIANAS_ISLANDS': 'NORTHERN_MARIANA_ISLANDS',
+        'MOSCOW': 'RUSSIA',
+        'MYANMAR]': 'MYANMAR',
+        'RHODESIA': 'ZIMBABWE',
+        'SICILY': 'ITALY',
+        'SWAZILAND': 'ESWATINI',
+        'TAMILNADU': 'INDIA',
+        'TRINIDAD_AND_TOBAGO': 'TRINIDAD_AND_TOBAGO',
+        'TYSKLAND': 'SWEDEN',
+        'VENEZUELA': 'VENEZUELA',
+
+        // Remove duplicates and fix malformed entries
+        'ETHIOPIA': 'ETHIOPIA',
+        'BOSNIA_AND_HERZEGOVINA]': 'BOSNIA_AND_HERZEGOVINA',
+        'CHINA)': 'CHINA',
+        'CROATIA)': 'CROATIA',
+        'POLAND]': 'POLAND',
+        'RUSSIA)': 'RUSSIA',
+        'RUSSIA]': 'RUSSIA',
+        'SWEDEN]': 'SWEDEN',
+        'UKRAINE]': 'UKRAINE',
+        'UK]': 'UNITED_KINGDOM',
+        'CHI': 'CHINA',
+        'BRITISH_CROWN_COLONY_[NOW_CHINA]': 'CHINA',
+        'BRITISH_GUIANA': 'GUYANA',
+        'BRITISH_HONG_KONG': 'HONG_KONG',
+        'BRITISH_INDIA': 'INDIA',
+        'BRITISH_WEST_INDIES': 'JAMAICA',
+        'US_VIRGIN_ISLANDS': 'UNITED_STATES_VIRGIN_ISLANDS'
+    };
+
+    return countryMap[country] || country;
+}
+
+function getCountry(placeOfBirth) {
+
+    let retCountry = null;
+    if (placeOfBirth && placeOfBirth.trim()) {
+        // Clean up the input
+        let cleaned = placeOfBirth.trim();
+
+        // Remove trailing periods and spaces
+        cleaned = cleaned.replace(/\.$/, '').trim();
+
+        // Handle dash-separated entries
+        if (cleaned.includes(' - ')) {
+            const parts = cleaned.split(' - ');
+            const lastPart = parts[parts.length - 1].trim();
+            retCountry = cleanCountryName(lastPart);
+        }
+        else if (cleaned.includes(',') || cleaned.includes('，')) {
+            // Handle comma-separated entries (including Chinese comma ，)
+            // Split by both regular comma and Chinese comma
+            const parts = cleaned.split(/[,，]/).map(part => part.trim());
+            const lastPart = parts[parts.length - 1];
+            retCountry = cleanCountryName(lastPart);
+        }
+        else {
+            // Single entry (likely just a country)
+            retCountry = cleanCountryName(cleaned);
+        }
+    }
+
+    retCountry = mapCountryToStandard(retCountry);
+
+    return retCountry;
+}
 
 // -------- main ----------
 async function main() {
