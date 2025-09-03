@@ -55,6 +55,8 @@ To run the services locally without Docker, follow these steps:
 
 ### Backend Setup
 
+- update backend .env file with local/ your redis instance
+
 ```bash
 cd backend
 npm install

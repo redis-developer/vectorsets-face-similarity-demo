@@ -7,6 +7,7 @@ import { existingElementSearch } from "./api/existing-element-search/index.js";
 import { newElementSearch } from "./api/new-element-search/index.js";
 import { addImageUploadRoute } from "./upload.js";
 import { getSampleImages } from "./api/get-sample-images/index.js";
+import { getServerConfig } from "./api/get-server-config/index.js";
 
 const router = express.Router();
 
@@ -82,6 +83,24 @@ router.post("/getSampleImages", async (req: Request, res: Response) => {
   } catch (err) {
     err = LoggerCls.getPureError(err);
     LoggerCls.error("/getSampleImages API failed !", err);
+    result.error = err;
+  }
+
+  res.send(result);
+});
+
+router.post("/getServerConfig", async (req: Request, res: Response) => {
+  const result: any = {
+    data: null,
+    error: null,
+  };
+  const input = req.body;
+
+  try {
+    result.data = await getServerConfig();
+  } catch (err) {
+    err = LoggerCls.getPureError(err);
+    LoggerCls.error("/getServerConfig API failed !", err);
     result.error = err;
   }
 
