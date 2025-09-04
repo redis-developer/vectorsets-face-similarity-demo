@@ -4,6 +4,25 @@ services:
     image: "redis:alpine"
     ports:
       - 6379:6379
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  embed-python:
+    build:
+      context: ./embed-python
+      dockerfile: Dockerfile
+    container_name: vectorsets-embed-python
+    ports:
+      - "8009:8009"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8009/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped
+
   # Backend service
   backend:
     build:
@@ -19,6 +38,11 @@ services:
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/static:/app/static
+    depends_on:
+      redis:
+        condition: service_started
+      embed-python:
+        condition: service_healthy
     restart: unless-stopped
 
   # Frontend service
@@ -36,3 +60,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  redis_data:

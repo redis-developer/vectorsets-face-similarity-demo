@@ -13,6 +13,10 @@ processor = ViTImageProcessor.from_pretrained(MODEL_ID)
 model = ViTForImageClassification.from_pretrained(MODEL_ID, output_hidden_states=True)
 model.eval()
 
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 @app.post("/embed")
 async def embed(file: UploadFile = File(...)):
     image = Image.open(io.BytesIO(await file.read())).convert("RGB")
