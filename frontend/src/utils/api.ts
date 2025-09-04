@@ -5,8 +5,8 @@ import {
   IExistingElementSearchInput,
   INewElementSearchInput,
   IVectorSetSearchResponse,
-  IServerConfig,
 } from "@/types";
+import type { IServerConfig } from "./constants";
 
 import { API_BASE_URL, IMAGE_BASE_URL, getClientConfig } from "./config";
 import { DATASETS_FILTERS } from "./constants";
