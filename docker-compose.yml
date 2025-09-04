@@ -34,7 +34,7 @@ services:
     ports:
       - "3001:3001"
     env_file:
-      - ./backend/.env
+      - ./backend/.env.docker
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/static:/app/static
@@ -56,7 +56,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend/.env
+      - ./frontend/.env.docker
     depends_on:
       - backend
     restart: unless-stopped

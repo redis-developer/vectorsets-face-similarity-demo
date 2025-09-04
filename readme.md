@@ -20,14 +20,10 @@ cd vectorsets-face-similarity
 git lfs pull
 ```
 
-### Set Environment Variables
+### Modify Environment Variables (optional)
 
-Copy the example environment files to configure both the backend and frontend.
-
-```bash
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
-```
+Modify the environment files to change default configurations.
+`backend/.env.docker` and `frontend/.env.docker`
 
 ### Start with Docker
 
@@ -55,7 +51,7 @@ To run the services locally without Docker, follow these steps:
 
 ### Backend Setup
 
-- update backend .env file with local/ your redis instance
+- (optional) update `backend/.env` file to change default configurations.
 
 ```bash
 cd backend
@@ -64,6 +60,8 @@ npm run dev
 ```
 
 ### Frontend Setup
+
+- (optional) update `frontend/.env` file to change default configurations.
 
 ```bash
 cd frontend
