@@ -16,6 +16,7 @@ const celebInputFields: InputField[] = [
 
 const celebMetaDisplayFields: Record<string, string> = {
   elementId: "ID",
+  label: "Name",
   charCount: "NameLength",
 };
 
@@ -88,6 +89,8 @@ const DATASET_NAMES = {
   VSET_TMDB: "VSET_TMDB",
 } as const;
 
+type DatasetNameType = (typeof DATASET_NAMES)[keyof typeof DATASET_NAMES];
+
 const DATASETS_FILTERS = {
   VSET_CELEB: {
     inputFields: celebInputFields,
@@ -99,4 +102,11 @@ const DATASETS_FILTERS = {
   },
 } as const;
 
+interface IServerConfig {
+  currentDataset: DatasetNameType;
+}
+type IClientConfig = IServerConfig;
+
 export { DATASET_NAMES, DATASETS_FILTERS };
+
+export type { DatasetNameType, IClientConfig, IServerConfig };

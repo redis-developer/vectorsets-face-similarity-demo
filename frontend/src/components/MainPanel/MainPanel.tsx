@@ -8,8 +8,8 @@ import DatabaseQuery from './DatabaseQuery/DatabaseQuery'
 import NearestMatchResult from './NearestMatchResult/NearestMatchResult'
 import OtherMatchResults from './OtherMatchResults/OtherMatchResults'
 import { useAppContext } from '@/contexts/AppContext'
+import { getClientConfig } from '@/utils/config'
 import { DATASETS_FILTERS } from '@/utils/constants'
-import { CURRENT_DATASET } from '@/utils/config'
 
 
 const PAGE_LABELS = {
@@ -29,7 +29,8 @@ const MainPanel: React.FC<MainPanelProps> = ({ selectedImage, onSetFilters, onCl
         otherMatches
     } = useAppContext()
 
-    const searchFields = DATASETS_FILTERS[CURRENT_DATASET].inputFields;
+    const { currentDataset } = getClientConfig()
+    const searchFields = DATASETS_FILTERS[currentDataset]?.inputFields || [];
 
     return (
         <div className={styles.mainPanel}>

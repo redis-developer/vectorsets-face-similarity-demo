@@ -5,9 +5,10 @@ import {
   IExistingElementSearchInput,
   INewElementSearchInput,
   IVectorSetSearchResponse,
+  IServerConfig,
 } from "@/types";
 
-import { API_BASE_URL, IMAGE_BASE_URL, CURRENT_DATASET } from "./config";
+import { API_BASE_URL, IMAGE_BASE_URL, getClientConfig } from "./config";
 import { DATASETS_FILTERS } from "./constants";
 import { showErrorToast } from "./toast";
 
@@ -16,6 +17,7 @@ const ENDPOINTS = {
   GET_SAMPLE_IMAGES: "/getSampleImages",
   EXISTING_ELEMENT_SEARCH: "/existingElementSearch",
   NEW_ELEMENT_SEARCH: "/newElementSearch",
+  GET_SERVER_CONFIG: "/getServerConfig",
 };
 
 const apiRequest = async <T>(
@@ -84,7 +86,8 @@ const fixImageURLs = (images: IImageDoc[]) => {
 };
 
 const fixImageMeta = (images: IImageDoc[]) => {
-  const datasetFilters = DATASETS_FILTERS[CURRENT_DATASET];
+  const { currentDataset } = getClientConfig();
+  const datasetFilters = DATASETS_FILTERS[currentDataset];
   const metaDisplayFields = datasetFilters?.metaDisplayFields || {};
 
   const retImages = images.map((image) => {
@@ -177,10 +180,19 @@ const newElementSearch = async (input: INewElementSearchInput) => {
   return response;
 };
 
+const getServerConfig = async () => {
+  const response = await apiPost<IServerConfig>(
+    ENDPOINTS.GET_SERVER_CONFIG,
+    {}
+  );
+  return response;
+};
+
 export {
   apiPost,
   apiImageUpload,
   existingElementSearch,
   getSampleImages,
   newElementSearch,
+  getServerConfig,
 };

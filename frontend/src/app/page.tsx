@@ -1,11 +1,15 @@
 'use client'
 import type { IApiResponse, IImageDoc, IVectorSetSearchResponse, SearchFormData } from '@/types'
 
-import { AppProvider, useAppContext } from '@/contexts/AppContext'
+import { useEffect } from 'react'
+
+import { useAppContext } from '@/contexts/AppContext'
+import { setClientConfig } from '@/utils/config'
 import LeftSidePanel from '@/components/LeftSidePanel/LeftSidePanel'
 import MainPanel from '@/components/MainPanel/MainPanel'
-import styles from './page.module.scss'
 import { existingElementSearch, newElementSearch } from '@/utils/api'
+
+import styles from './page.module.scss'
 
 const buildFilterQuery = (
     searchData: Record<string, string | number>
@@ -38,6 +42,10 @@ function HomeContent() {
         setSearchFormData,
         setLastQuery
     } = useAppContext()
+
+    useEffect(() => {
+        setClientConfig();
+    }, []);
 
     const handleImage = async (image: IImageDoc) => {
         setSelectedImage(image)
@@ -118,9 +126,5 @@ function HomeContent() {
 }
 
 export default function Home() {
-    return (
-        <AppProvider>
-            <HomeContent />
-        </AppProvider>
-    )
+    return <HomeContent />
 }
