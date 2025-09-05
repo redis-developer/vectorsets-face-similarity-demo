@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import styles from "./Selfie.module.scss";
 import { apiImageUpload } from "@/utils/api";
 import type { IImageDoc } from "@/types";
@@ -11,24 +11,43 @@ type Props = {
     fileSizeMax?: number;
     width?: number | string;
     maxWidth?: number | string;
+    buttonText?: string; // Custom button text
 };
 
-const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) => {
-    console.log('🚀 Selfie component rendered with props:', { onUploaded: !!onUploaded, fileSizeMax, width, maxWidth });
+const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, buttonText = "📷 Take Selfie" }) => {
+    console.log('Selfie component rendered with props:', { onUploaded: !!onUploaded, fileSizeMax, width, maxWidth });
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [videoLoaded, setVideoLoaded] = useState(false);
 
+    const handleOpenModal = useCallback(() => {
+        setIsModalOpen(true);
+    }, []);
+
+    const handleCloseModal = useCallback(() => {
+        setIsModalOpen(false);
+        // Stop camera and reset state when modal closes
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+        }
+        setIsCameraOpen(false);
+        setCapturedImage(null);
+        setVideoLoaded(false);
+        setError(null);
+    }, []);
+
     const startCamera = useCallback(async () => {
         try {
-            console.log('🎥 Starting camera...');
+            console.log('Starting camera...');
             setError(null);
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -38,7 +57,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
                 }
             });
 
-            console.log('📹 Camera stream obtained:', stream);
+            console.log('Camera stream obtained:', stream);
             streamRef.current = stream; // Store stream immediately
             setIsCameraOpen(true); // Set camera open, this will cause video element to render
             setVideoLoaded(false); // Reset video loaded state
@@ -80,7 +99,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
         // Set canvas dimensions to match video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        console.log(`📐 Canvas dimensions: ${canvas.width}x${canvas.height}`);
+        console.log(`Canvas dimensions: ${canvas.width}x${canvas.height}`);
 
         // Draw the current video frame to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -88,7 +107,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
         // Convert canvas to blob
         canvas.toBlob((blob) => {
             if (blob) {
-                console.log('🖼️ Photo captured, blob size:', blob.size);
+                console.log('Photo captured, blob size:', blob.size);
                 const imageUrl = URL.createObjectURL(blob);
                 setCapturedImage(imageUrl);
 
@@ -99,7 +118,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
                 }
                 setIsCameraOpen(false);
                 setVideoLoaded(false);
-                console.log('📸 Photo captured and camera stopped');
+                console.log('Photo captured and camera stopped');
             } else {
                 console.error('❌ Failed to create blob from canvas');
             }
@@ -112,9 +131,9 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
     }, [startCamera]);
 
     const handleVideoLoaded = useCallback(() => {
-        console.log('🎬 Video loaded and ready');
-        console.log('📹 Video element:', videoRef.current);
-        console.log('📐 Video dimensions:', {
+        console.log('Video loaded and ready');
+        console.log('Video element:', videoRef.current);
+        console.log('Video dimensions:', {
             videoWidth: videoRef.current?.videoWidth,
             videoHeight: videoRef.current?.videoHeight,
             clientWidth: videoRef.current?.clientWidth,
@@ -124,7 +143,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
     }, []);
 
     const uploadPhoto = useCallback(async () => {
-        console.log('⬆️ Starting photo upload...');
+        console.log('Starting photo upload...');
         if (!canvasRef.current) {
             console.error('❌ Canvas ref not available for upload');
             return;
@@ -140,7 +159,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
             });
 
             const file = new File([blob], 'selfie.jpg', { type: 'image/jpeg' });
-            console.log('📁 File created:', { name: file.name, size: file.size, type: file.type });
+            console.log('File created:', { name: file.name, size: file.size, type: file.type });
 
             if (fileSizeMax && file.size > fileSizeMax) {
                 const errorMessage = "Photo is larger than " + (fileSizeMax / 1024 / 1024).toFixed(2) + " MB";
@@ -149,9 +168,9 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
                 return;
             }
 
-            console.log('🚀 Calling apiImageUpload...');
+            console.log('Calling apiImageUpload...');
             const uploaded = await apiImageUpload(file);
-            console.log('📤 Upload response:', uploaded);
+            console.log('Upload response:', uploaded);
 
             if (uploaded.data) {
                 console.log('✅ Upload successful:', uploaded.data);
@@ -162,8 +181,8 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
                         filename: uploaded.data?.filename || "",
                     });
                 }
-                // Reset component state after successful upload
-                setCapturedImage(null);
+                // Close modal after successful upload
+                handleCloseModal();
             } else {
                 console.error('❌ Upload failed:', uploaded.error);
             }
@@ -206,7 +225,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
     React.useEffect(() => {
         if (isCameraOpen && !videoLoaded) {
             const timeout = setTimeout(() => {
-                console.log('⏰ Fallback: Setting video as loaded after timeout');
+                console.log('Fallback: Setting video as loaded after timeout');
                 setVideoLoaded(true);
             }, 2000);
 
@@ -214,105 +233,150 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) =
         }
     }, [isCameraOpen, videoLoaded]);
 
+    // Auto-start camera when modal opens
+    React.useEffect(() => {
+        if (isModalOpen && !isCameraOpen && !capturedImage) {
+            console.log('Auto-starting camera when modal opens...');
+            startCamera();
+        }
+    }, [isModalOpen, isCameraOpen, capturedImage, startCamera]);
+
+    // Handle escape key to close modal
+    useEffect(() => {
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && isModalOpen) {
+                handleCloseModal();
+            }
+        };
+
+        if (isModalOpen) {
+            document.addEventListener('keydown', handleEscape);
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'unset';
+        };
+    }, [isModalOpen, handleCloseModal]);
+
     // Debug logging
-    console.log('🔍 Component state:', { isCameraOpen, videoLoaded, capturedImage, busy, error });
+    console.log('🔍 Component state:', { isModalOpen, isCameraOpen, videoLoaded, capturedImage, busy, error });
 
     return (
-        <div className={styles.selfie}>
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
+        <>
+            {/* Trigger Button */}
+            <button
+                type="button"
+                className={styles["selfie__button"]}
+                onClick={handleOpenModal}
+                disabled={busy}
+                style={buttonStyle}
+            >
+                {buttonText}
+            </button>
 
-            {!isCameraOpen && !capturedImage && (
-                <button
-                    type="button"
-                    className={styles["selfie__button"]}
-                    onClick={() => {
-                        console.log('🔘 Take Selfie button clicked');
-                        startCamera();
-                    }}
-                    disabled={busy}
-                    style={buttonStyle}
-                >
-                    📷 Take Selfie
-                </button>
-            )}
-
-            {isCameraOpen && (
-                <div className={styles["selfie__camera"]}>
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        muted
-                        onLoadedMetadata={handleVideoLoaded}
-                        className={styles["selfie__video"]}
-                        style={{
-                            width: '100%',
-                            maxWidth: '400px',
-                            height: 'auto',
-                            border: '2px solid #e5e7eb',
-                            borderRadius: '8px',
-                            backgroundColor: '#f3f4f6'
-                        }}
-                    />
-                    <div className={styles["selfie__controls"]}>
-                        <button
-                            type="button"
-                            className={styles["selfie__capture"]}
-                            onClick={capturePhoto}
-                            disabled={!videoLoaded}
-                        >
-                            📸 Capture {!videoLoaded && '(Loading...)'}
-                        </button>
-                        <button
-                            type="button"
-                            className={styles["selfie__cancel"]}
-                            onClick={stopCamera}
-                        >
-                            ❌ Cancel
-                        </button>
-                    </div>
-                    {!videoLoaded && (
-                        <div style={{ textAlign: 'center', padding: '10px', color: '#6b7280', fontSize: '14px' }}>
-                            Loading camera... (Check console for details)
+            {/* Modal Overlay */}
+            {isModalOpen && (
+                <div className={styles["selfie__modal-overlay"]} onClick={handleCloseModal}>
+                    <div
+                        className={styles["selfie__modal-content"]}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className={styles["selfie__modal-header"]}>
+                            <h3 className={styles["selfie__modal-title"]}>Take a Selfie</h3>
+                            <button
+                                type="button"
+                                className={styles["selfie__modal-close"]}
+                                onClick={handleCloseModal}
+                                aria-label="Close modal"
+                            >
+                                ✕
+                            </button>
                         </div>
-                    )}
-                </div>
-            )}
 
-            {capturedImage && (
-                <div className={styles["selfie__preview"]}>
-                    <img
-                        src={capturedImage}
-                        alt="Captured selfie"
-                        className={styles["selfie__image"]}
-                    />
-                    <div className={styles["selfie__actions"]}>
-                        <button
-                            type="button"
-                            className={styles["selfie__upload"]}
-                            onClick={uploadPhoto}
-                            disabled={busy}
-                        >
-                            {busy ? "Uploading…" : "Upload Photo"}
-                        </button>
-                        <button
-                            type="button"
-                            className={styles["selfie__retake"]}
-                            onClick={retakePhoto}
-                            disabled={busy}
-                        >
-                            🔄 Retake
-                        </button>
+                        {/* Modal Body */}
+                        <div className={styles["selfie__modal-body"]}>
+                            <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+                            {!capturedImage ? (
+                                <div className={styles["selfie__camera"]}>
+                                    <div className={styles["selfie__video-container"]}>
+                                        {isCameraOpen && (
+                                            <video
+                                                ref={videoRef}
+                                                autoPlay
+                                                playsInline
+                                                muted
+                                                onLoadedMetadata={handleVideoLoaded}
+                                                className={styles["selfie__video"]}
+                                            />
+                                        )}
+                                        {!videoLoaded && (
+                                            <div className={styles["selfie__video-placeholder"]}>
+                                                <div className={styles["selfie__loading-spinner"]}></div>
+                                                <p>Loading camera...</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className={styles["selfie__controls"]}>
+                                        <button
+                                            type="button"
+                                            className={styles["selfie__capture"]}
+                                            onClick={capturePhoto}
+                                            disabled={!videoLoaded}
+                                        >
+                                            📸 Capture {!videoLoaded && '(Loading...)'}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={styles["selfie__cancel"]}
+                                            onClick={handleCloseModal}
+                                        >
+                                            ❌ Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className={styles["selfie__preview"]}>
+                                    <img
+                                        src={capturedImage}
+                                        alt="Captured selfie"
+                                        className={styles["selfie__image"]}
+                                    />
+                                    <div className={styles["selfie__actions"]}>
+                                        <button
+                                            type="button"
+                                            className={styles["selfie__upload"]}
+                                            onClick={uploadPhoto}
+                                            disabled={busy}
+                                        >
+                                            {busy ? "Uploading…" : "Upload Photo"}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={styles["selfie__retake"]}
+                                            onClick={retakePhoto}
+                                            disabled={busy}
+                                        >
+                                            🔄 Retake
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {error && (
+                                <div className={styles["selfie__error"]}>
+                                    {error}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
-
-            {error && (
-                <div className={styles["selfie__error"]}>
-                    {error}
-                </div>
-            )}
-        </div>
+        </>
     );
 };
 

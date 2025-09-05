@@ -75,13 +75,50 @@
     align-items: center;
   }
 
-  &__video {
+  &__video-container {
+    position: relative;
     width: 100%;
     max-width: 400px;
-    height: auto;
+    height: 300px;
+    margin: 0 auto;
+    border-radius: $radius-8;
+    background: $gray-100;
+    overflow: hidden;
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: $radius-8;
     box-shadow: $shadow;
     background: $gray-100;
+  }
+
+  &__video-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: $gray-100;
+    border-radius: $radius-8;
+    color: $gray-500;
+    font-size: $font-size-sm;
+    gap: $space-3;
+  }
+
+  &__loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid $gray-300;
+    border-top: 3px solid $primary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
 
   &__controls {
@@ -227,5 +264,144 @@
     background: rgba($error, 0.1);
     border-radius: $radius-8;
     border: 1px solid rgba($error, 0.2);
+  }
+
+  // Modal styles
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: $space-4;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  &__modal-content {
+    background: $white;
+    border-radius: $radius-16;
+    box-shadow: $shadow-lg;
+    max-width: 500px;
+    width: 100%;
+    height: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid $gray-200;
+    background: $gray-50;
+  }
+
+  &__modal-title {
+    margin: 0;
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $gray-900;
+    font-family: $font-sans;
+  }
+
+  &__modal-close {
+    background: none;
+    border: none;
+    font-size: $font-size-xl;
+    color: $gray-500;
+    cursor: pointer;
+    padding: $space-1;
+    border-radius: $radius-4;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+
+    &:hover {
+      background: $gray-200;
+      color: $gray-700;
+    }
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+  }
+
+  &__modal-body {
+    padding: $space-5;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .selfie {
+    &__modal-overlay {
+      padding: $space-2;
+    }
+
+    &__modal-content {
+      height: 450px;
+      max-height: 95vh;
+    }
+
+    &__modal-header {
+      padding: $space-3 $space-4;
+    }
+
+    &__modal-body {
+      padding: $space-4;
+    }
+
+    &__video-container {
+      height: 250px;
+    }
   }
 }

@@ -16,14 +16,8 @@ export default function SelfiePage() {
             </h1>
 
             <p style={{ marginBottom: "20px", color: "#6b7280", maxWidth: "600px" }}>
-                This demo shows the Selfie component in action. <strong>Step-by-step process:</strong>
+                This demo shows the Selfie component with modal interface.
             </p>
-            <ol style={{ marginBottom: "20px", color: "#6b7280", maxWidth: "600px", paddingLeft: "20px" }}>
-                <li>Click &quot;📷 Take Selfie&quot; to access your camera (check browser console for logs)</li>
-                <li>Allow camera permissions when prompted</li>
-                <li>Click &quot;📸 Capture&quot; to take a photo</li>
-                <li>Click &quot;Upload Photo&quot; to save it to the backend</li>
-            </ol>
             <p style={{ marginBottom: "20px", color: "#6b7280", maxWidth: "600px", fontStyle: "italic" }}>
                 <strong>Note:</strong> Open browser developer tools (F12) to see detailed console logs of the process.
             </p>
@@ -70,7 +64,6 @@ export default function SelfiePage() {
                     <li>🔄 Retake functionality</li>
                     <li>⬆️ Upload to same API as UploadImage</li>
                     <li>📏 File size validation (1MB limit)</li>
-                    <li>🎨 Consistent styling with other components</li>
                 </ul>
             </div>
         </div>
