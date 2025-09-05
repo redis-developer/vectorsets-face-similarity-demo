@@ -1,0 +1,231 @@
+@import "@/styles/common.scss";
+
+.selfie {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  &__button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: $primary;
+    color: $white;
+    border-radius: $radius-12;
+    padding: $space-3 $space-4;
+    font-family: $font-sans;
+    font-size: $font-size-md;
+    transition: all 0.2s ease;
+    box-shadow: $shadow-sm;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.5s ease;
+    }
+
+    &:hover {
+      background: lighten($primary, 5%);
+      box-shadow: $shadow;
+
+      &::before {
+        left: 100%;
+      }
+    }
+    &:active {
+      background: darken($primary, 5%);
+      box-shadow: $shadow-sm;
+    }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: $shadow-sm;
+    }
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+  }
+
+  &__camera {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    align-items: center;
+  }
+
+  &__video {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: $radius-8;
+    box-shadow: $shadow;
+    background: $gray-100;
+  }
+
+  &__controls {
+    display: flex;
+    gap: $space-3;
+    justify-content: center;
+  }
+
+  &__capture {
+    background: $success;
+    color: $white;
+    border: none;
+    border-radius: $radius-8;
+    padding: $space-2 $space-4;
+    font-family: $font-sans;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      background: lighten($success, 5%);
+      box-shadow: $shadow;
+    }
+    &:active {
+      background: darken($success, 5%);
+    }
+    &:focus-visible {
+      outline: 2px solid $success;
+      outline-offset: 2px;
+    }
+  }
+
+  &__cancel {
+    background: $error;
+    color: $white;
+    border: none;
+    border-radius: $radius-8;
+    padding: $space-2 $space-4;
+    font-family: $font-sans;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      background: lighten($error, 5%);
+      box-shadow: $shadow;
+    }
+    &:active {
+      background: darken($error, 5%);
+    }
+    &:focus-visible {
+      outline: 2px solid $error;
+      outline-offset: 2px;
+    }
+  }
+
+  &__preview {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    align-items: center;
+  }
+
+  &__image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: $radius-8;
+    box-shadow: $shadow;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-3;
+    justify-content: center;
+  }
+
+  &__upload {
+    background: $primary;
+    color: $white;
+    border: none;
+    border-radius: $radius-8;
+    padding: $space-2 $space-4;
+    font-family: $font-sans;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(:disabled) {
+      background: lighten($primary, 5%);
+      box-shadow: $shadow;
+    }
+    &:active:not(:disabled) {
+      background: darken($primary, 5%);
+    }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+  }
+
+  &__retake {
+    background: $gray-500;
+    color: $white;
+    border: none;
+    border-radius: $radius-8;
+    padding: $space-2 $space-4;
+    font-family: $font-sans;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(:disabled) {
+      background: lighten($gray-500, 5%);
+      box-shadow: $shadow;
+    }
+    &:active:not(:disabled) {
+      background: darken($gray-500, 5%);
+    }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    &:focus-visible {
+      outline: 2px solid $gray-500;
+      outline-offset: 2px;
+    }
+  }
+
+  &__error {
+    color: $error;
+    font-size: $font-size-sm;
+    text-align: center;
+    padding: $space-2;
+    background: rgba($error, 0.1);
+    border-radius: $radius-8;
+    border: 1px solid rgba($error, 0.2);
+  }
+}
