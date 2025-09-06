@@ -104,7 +104,10 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
         canvas.height = video.videoHeight;
         console.log(`Canvas dimensions: ${canvas.width}x${canvas.height}`);
 
-        // Apply mirror transform if enabled
+        // Save the current context state
+        context.save();
+
+        // Apply mirror transform if enabled - this will make the captured image match what the user sees
         if (isMirrored) {
             context.scale(-1, 1);
             context.translate(-canvas.width, 0);
@@ -112,6 +115,9 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
 
         // Draw the current video frame to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Restore the context state
+        context.restore();
 
         // Convert canvas to blob
         canvas.toBlob((blob) => {
@@ -369,7 +375,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
                                     <img
                                         src={capturedImage}
                                         alt="Captured selfie"
-                                        className={`${styles["selfie__image"]} ${isMirrored ? styles["selfie__image--mirrored"] : ""}`}
+                                        className={styles["selfie__image"]}
                                     />
                                     <div className={styles["selfie__actions"]}>
                                         <button
