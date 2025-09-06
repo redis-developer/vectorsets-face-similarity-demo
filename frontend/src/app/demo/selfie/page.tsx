@@ -16,7 +16,7 @@ export default function SelfiePage() {
             </h1>
 
             <p style={{ marginBottom: "20px", color: "#6b7280", maxWidth: "600px" }}>
-                This demo shows the Selfie component with modal interface.
+                This demo shows the Selfie component with modal interface and mirror view functionality.
             </p>
             <p style={{ marginBottom: "20px", color: "#6b7280", maxWidth: "600px", fontStyle: "italic" }}>
                 <strong>Note:</strong> Open browser developer tools (F12) to see detailed console logs of the process.
@@ -61,6 +61,7 @@ export default function SelfiePage() {
                 <ul style={{ margin: 0, paddingLeft: "20px", color: "#374151" }}>
                     <li>📷 Access to front-facing camera</li>
                     <li>📸 Photo capture with preview</li>
+                    <li>🪞 Mirror view toggle (default: enabled)</li>
                     <li>🔄 Retake functionality</li>
                     <li>⬆️ Upload to same API as UploadImage</li>
                     <li>📏 File size validation (1MB limit)</li>

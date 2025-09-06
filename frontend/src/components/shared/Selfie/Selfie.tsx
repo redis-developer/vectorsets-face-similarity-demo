@@ -27,6 +27,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [videoLoaded, setVideoLoaded] = useState(false);
+    const [isMirrored, setIsMirrored] = useState(true); // Default to mirrored (like a real mirror)
 
     const handleOpenModal = useCallback(() => {
         setIsModalOpen(true);
@@ -43,6 +44,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
         setCapturedImage(null);
         setVideoLoaded(false);
         setError(null);
+        setIsMirrored(true); // Reset to default mirrored state
     }, []);
 
     const startCamera = useCallback(async () => {
@@ -78,6 +80,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
         setIsCameraOpen(false);
         setCapturedImage(null);
         setVideoLoaded(false);
+        setIsMirrored(true); // Reset to default mirrored state
     }, []);
 
     const capturePhoto = useCallback(() => {
@@ -101,6 +104,12 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
         canvas.height = video.videoHeight;
         console.log(`Canvas dimensions: ${canvas.width}x${canvas.height}`);
 
+        // Apply mirror transform if enabled
+        if (isMirrored) {
+            context.scale(-1, 1);
+            context.translate(-canvas.width, 0);
+        }
+
         // Draw the current video frame to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -123,12 +132,16 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
                 console.error('❌ Failed to create blob from canvas');
             }
         }, 'image/jpeg', 0.8);
-    }, []);
+    }, [isMirrored]);
 
     const retakePhoto = useCallback(() => {
         setCapturedImage(null);
         startCamera();
     }, [startCamera]);
+
+    const toggleMirror = useCallback(() => {
+        setIsMirrored(prev => !prev);
+    }, []);
 
     const handleVideoLoaded = useCallback(() => {
         console.log('Video loaded and ready');
@@ -303,6 +316,18 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
 
                             {!capturedImage ? (
                                 <div className={styles["selfie__camera"]}>
+                                    <div className={styles["selfie__mirror-control"]}>
+                                        <label className={styles["selfie__mirror-checkbox"]}>
+                                            <input
+                                                type="checkbox"
+                                                checked={isMirrored}
+                                                onChange={toggleMirror}
+                                            />
+                                            <span className={styles["selfie__mirror-label"]}>
+                                                Mirror view
+                                            </span>
+                                        </label>
+                                    </div>
                                     <div className={styles["selfie__video-container"]}>
                                         {isCameraOpen && (
                                             <video
@@ -311,7 +336,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
                                                 playsInline
                                                 muted
                                                 onLoadedMetadata={handleVideoLoaded}
-                                                className={styles["selfie__video"]}
+                                                className={`${styles["selfie__video"]} ${isMirrored ? styles["selfie__video--mirrored"] : ""}`}
                                             />
                                         )}
                                         {!videoLoaded && (
@@ -344,7 +369,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
                                     <img
                                         src={capturedImage}
                                         alt="Captured selfie"
-                                        className={styles["selfie__image"]}
+                                        className={`${styles["selfie__image"]} ${isMirrored ? styles["selfie__image--mirrored"] : ""}`}
                                     />
                                     <div className={styles["selfie__actions"]}>
                                         <button
