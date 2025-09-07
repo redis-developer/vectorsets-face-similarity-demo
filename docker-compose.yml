@@ -5,7 +5,8 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - redis_data:/data
+      #- redis_data:/data
+      - ./database/redis-data:/data
     restart: unless-stopped
 
   embed-python:
@@ -63,6 +64,5 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
-volumes:
-  redis_data:
+#volumes:
+#  redis_data:
