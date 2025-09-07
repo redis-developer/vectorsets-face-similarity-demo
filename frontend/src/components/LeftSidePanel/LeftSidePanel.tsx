@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Upload, Camera } from 'lucide-react';
 import styles from './LeftSidePanel.module.scss';
 import UploadImage from '../shared/UploadImage/UploadImage';
+import Selfie from '../shared/Selfie/Selfie';
 import ImageCard from '../shared/ImageCard/ImageCard';
 import { getSampleImages } from '@/utils/api';
 import type { IImageDoc } from '@/types';
@@ -73,12 +74,23 @@ const LeftSidePanel: React.FC<Props> = ({
     return (
         <div className={styles.leftSidePanel} style={panelStyle}>
             <div className={styles.uploadSection}>
-                <UploadImage
-                    onUploaded={handleImageUpload}
-                    fileSizeMax={MAX_UPLOAD_FILE_SIZE}
-                    width="100%"
-                    maxWidth={width}
-                />
+                <div className={styles.uploadRow}>
+                    <UploadImage
+                        onUploaded={handleImageUpload}
+                        fileSizeMax={MAX_UPLOAD_FILE_SIZE}
+                        width="100%"
+                        buttonText="Photo"
+                        icon={<Upload size={16} />}
+                    />
+                    <span className={styles.orText}>OR</span>
+                    <Selfie
+                        onUploaded={handleImageUpload}
+                        fileSizeMax={MAX_UPLOAD_FILE_SIZE}
+                        width="48%"
+                        buttonText="Selfie"
+                        icon={<Camera size={16} />}
+                    />
+                </div>
             </div>
 
             <div className={styles.labelSection}>

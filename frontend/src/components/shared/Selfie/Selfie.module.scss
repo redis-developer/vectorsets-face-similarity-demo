@@ -68,6 +68,12 @@
     }
   }
 
+  &__icon {
+    margin-right: $space-2;
+    display: flex;
+    align-items: center;
+  }
+
   &__camera {
     display: flex;
     flex-direction: column;

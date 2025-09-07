@@ -12,9 +12,10 @@ type Props = {
     width?: number | string;
     maxWidth?: number | string;
     buttonText?: string; // Custom button text
+    icon?: React.ReactNode;
 };
 
-const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, buttonText = "📷 Take Selfie" }) => {
+const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, buttonText = "📷 Take Selfie", icon }) => {
     console.log('Selfie component rendered with props:', { onUploaded: !!onUploaded, fileSizeMax, width, maxWidth });
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -293,6 +294,7 @@ const Selfie: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, but
                 disabled={busy}
                 style={buttonStyle}
             >
+                {icon && <span className={styles["selfie__icon"]}>{icon}</span>}
                 {buttonText}
             </button>
 

@@ -11,9 +11,11 @@ type Props = {
     fileSizeMax?: number;
     width?: number | string;
     maxWidth?: number | string;
+    buttonText?: string; // Custom button text
+    icon?: React.ReactNode;
 };
 
-const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth }) => {
+const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth, buttonText, icon }) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [busy, setBusy] = useState(false);
 
@@ -80,7 +82,14 @@ const UploadImage: React.FC<Props> = ({ onUploaded, fileSizeMax, width, maxWidth
                 aria-busy={busy}
                 style={buttonStyle}
             >
-                {busy ? "Uploading…" : "Choose Photo"}
+                {busy ? (
+                    "Uploading…"
+                ) : (
+                    <>
+                        {icon && <span className={styles["uploadImage__icon"]}>{icon}</span>}
+                        {buttonText || "Choose Photo"}
+                    </>
+                )}
             </button>
 
             {/* <div className={styles["uploadImage__hint"]}>

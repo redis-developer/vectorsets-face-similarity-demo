@@ -21,6 +21,22 @@
 
   .uploadSection {
     margin-bottom: 20px;
+
+    .uploadRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .orText {
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
   }
 
   .labelSection {
