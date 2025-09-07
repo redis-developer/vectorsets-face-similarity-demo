@@ -3,7 +3,7 @@ import type { DatasetNameType } from '@/utils/constants'
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import type { IImageDoc, SearchFormData } from '@/types'
-import { getClientConfig } from '@/utils/config'
+import { getClientConfig, setClientConfig } from '@/utils/config'
 
 // Context
 const AppContext = createContext<{
@@ -35,6 +35,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const config = getClientConfig();
         return config.currentDataset;
     })
+
+    // Sync selectedDataset with server config when it loads
+    useEffect(() => {
+        const syncWithServerConfig = async () => {
+            await setClientConfig();
+            const config = getClientConfig();
+            setSelectedDataset(config.currentDataset);
+        };
+        syncWithServerConfig();
+    }, [])
 
     return (
         <AppContext.Provider value={{

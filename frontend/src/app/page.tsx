@@ -4,7 +4,6 @@ import type { IApiResponse, IImageDoc, IVectorSetSearchResponse, SearchFormData 
 import { useEffect } from 'react'
 
 import { useAppContext } from '@/contexts/AppContext'
-import { setClientConfig } from '@/utils/config'
 import LeftSidePanel from '@/components/LeftSidePanel/LeftSidePanel'
 import MainPanel from '@/components/MainPanel/MainPanel'
 import { existingElementSearch, newElementSearch } from '@/utils/api'
@@ -44,9 +43,6 @@ function HomeContent() {
         selectedDataset
     } = useAppContext()
 
-    useEffect(() => {
-        setClientConfig();
-    }, []);
 
     const handleImage = async (image: IImageDoc) => {
         setSelectedImage(image)
