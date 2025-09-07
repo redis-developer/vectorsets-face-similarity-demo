@@ -78,7 +78,7 @@ const LeftSidePanel: React.FC<Props> = ({
                     <UploadImage
                         onUploaded={handleImageUpload}
                         fileSizeMax={MAX_UPLOAD_FILE_SIZE}
-                        width="100%"
+                        width="100px"
                         buttonText="Photo"
                         icon={<Upload size={16} />}
                     />
@@ -86,7 +86,7 @@ const LeftSidePanel: React.FC<Props> = ({
                     <Selfie
                         onUploaded={handleImageUpload}
                         fileSizeMax={MAX_UPLOAD_FILE_SIZE}
-                        width="48%"
+                        width="100px"
                         buttonText="Selfie"
                         icon={<Camera size={16} />}
                     />
