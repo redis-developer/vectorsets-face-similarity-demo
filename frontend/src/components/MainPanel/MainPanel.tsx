@@ -7,6 +7,7 @@ import SearchBar from './SearchBar/SearchBar'
 import DatabaseQuery from './DatabaseQuery/DatabaseQuery'
 import NearestMatchResult from './NearestMatchResult/NearestMatchResult'
 import OtherMatchResults from './OtherMatchResults/OtherMatchResults'
+import PlaceholderContent from './PlaceholderContent/PlaceholderContent'
 import { useAppContext } from '@/contexts/AppContext'
 import { getClientConfig } from '@/utils/config'
 import { DATASETS_FILTERS } from '@/utils/constants'
@@ -35,20 +36,26 @@ const MainPanel: React.FC<MainPanelProps> = ({ selectedImage, onSetFilters, onCl
     return (
         <div className={styles.mainPanel}>
             <Header title={PAGE_LABELS.title} />
-            <SearchBar
-                inputFields={searchFields}
-                onSearch={onSetFilters}
-                onClear={onClearFilters}
-                mode='auto'
-                labelPosition='left'
-            />
-            <DatabaseQuery />
-            <NearestMatchResult
-                selectedImage={selectedImage}
-                celebrityMatch={celebrityMatch}
-                isSearching={isSearching}
-            />
-            <OtherMatchResults otherMatches={otherMatches} />
+            {selectedImage ? (
+                <>
+                    <SearchBar
+                        inputFields={searchFields}
+                        onSearch={onSetFilters}
+                        onClear={onClearFilters}
+                        mode='auto'
+                        labelPosition='left'
+                    />
+                    <DatabaseQuery />
+                    <NearestMatchResult
+                        selectedImage={selectedImage}
+                        celebrityMatch={celebrityMatch}
+                        isSearching={isSearching}
+                    />
+                    <OtherMatchResults otherMatches={otherMatches} />
+                </>
+            ) : (
+                <PlaceholderContent />
+            )}
         </div>
     )
 }

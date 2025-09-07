@@ -1,0 +1,163 @@
+@import "@/styles/colors.scss";
+@import "@/styles/typography.scss";
+
+.placeholderContent {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  padding: 20px;
+  overflow: auto;
+}
+
+.content {
+  text-align: center;
+  width: 100%;
+  background: $white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+  margin-top: 20px;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: 600;
+  color: $gray-700;
+  margin: 0 0 24px 0;
+  line-height: $line-tight;
+  display: block;
+  visibility: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.option {
+  width: 100%;
+  // max-width: 400px;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.optionContent {
+  text-align: center;
+
+  h3 {
+    font-size: $font-size-md;
+    font-weight: 600;
+    color: $gray-700;
+    margin: 0 0 8px 0;
+    line-height: $line-tight;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $muted;
+    margin: 0;
+    line-height: $line-normal;
+  }
+}
+
+.orDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $primary;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $primary, transparent);
+  }
+
+  &::before {
+    left: -70px;
+  }
+
+  &::after {
+    right: -70px;
+  }
+}
+
+.noteBlock {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, $gray-50 0%, $white 100%);
+  border: 1px solid $border;
+  border-left: 3px solid $primary;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 24px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: $shadow-sm;
+}
+
+.noteIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: $primary;
+}
+
+.noteContent {
+  flex: 1;
+
+  h4 {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text;
+    margin: 0 0 8px 0;
+    line-height: $line-tight;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $muted;
+    margin: 0 0 8px 0;
+    line-height: $line-normal;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 16px;
+
+    li {
+      font-size: $font-size-sm;
+      color: $muted;
+      line-height: $line-normal;
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
+        color: $text;
+        font-weight: 600;
+      }
+    }
+  }
+}

@@ -114,11 +114,11 @@ const DATASET_NAMES = {
 
 const DATASETS_OPTIONS = [
   {
-    label: "Celebrity 1000",
+    label: "Celebrity 1000 dataset",
     value: DATASET_NAMES.VSET_CELEB,
   },
   {
-    label: "TMDB 10k",
+    label: "TMDB 10k dataset",
     value: DATASET_NAMES.VSET_TMDB,
   },
 ];
