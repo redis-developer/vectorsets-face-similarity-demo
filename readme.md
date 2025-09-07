@@ -4,20 +4,12 @@ This project demonstrates face similarity search using **Redis VectorSets**. It 
 
 ## Quick Start
 
-### Clone with Git LFS
-
-This repository uses **Git LFS** (Large File Storage) to manage large image files. To clone the repository correctly, you **must** have Git with Git LFS installed.
+### Clone
 
 ```bash
-# Install Git LFS
-# macOS: brew install git-lfs
-# Ubuntu: sudo apt-get install git-lfs
-# Windows: choco install git-lfs
 
-git lfs install
 git clone https://github.com/PrasanKumar93/vectorsets-face-similarity.git
 cd vectorsets-face-similarity
-git lfs pull
 ```
 
 ### Modify Environment Variables (optional)
@@ -69,21 +61,12 @@ npm install
 npm run dev
 ```
 
-### Redis Setup
+## Database
 
-Ensure a local Redis instance is running (if started by docker-compose), or update the backend environment variable to point to your specific Redis instance.
+If you start with `docker-compose`, the database will automatically load the `database/redis-data/dump.rdb` file. Otherwise, follow these steps to load the data:
 
-## 📊 Datasets
+1> Upload the `database/tmdb/output/tmdb.redis` and `database/celebrity-1000-embeddings/output/celebs.redis` files to your Redis database (e.g., `redis://localhost:6379`).
 
-This project includes pre-processed datasets to get you started quickly. The large image files are stored using Git LFS to keep the repository size small.
-
-- **TMDB Dataset**: Contains over 10,000 actors' images and basic details.
-
-### Seed Data into Redis
-
-To populate the Redis database with the TMDB dataset, use a tool like **Redis Insight**.
-
-Upload the `database/tmdb/output/tmdb.redis` file to your Redis database (e.g., `redis://localhost:6379`).
-You can use the **Bulk Actions -> Upload Data** feature in Redis Insight.
+2> You can use the Bulk Actions -> Upload Data feature in Redis Insight.
 
 ![Redis Insight Upload](./docs/images/redis-insight-upload.png)
