@@ -1,9 +1,11 @@
 'use client'
 import type { DatasetNameType } from '@/utils/constants'
+import type { IImageDoc, SearchFormData } from '@/types'
+
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
-import type { IImageDoc, SearchFormData } from '@/types'
 import { getClientConfig, setClientConfig } from '@/utils/config'
+import { DATASET_NAMES } from '@/utils/constants'
 
 // Context
 const AppContext = createContext<{
@@ -32,8 +34,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [searchFormData, setSearchFormData] = useState<SearchFormData>({})
     const [lastQuery, setLastQuery] = useState<string>('')
     const [selectedDataset, setSelectedDataset] = useState<DatasetNameType>(() => {
-        const config = getClientConfig();
-        return config.currentDataset;
+        // Use default config initially, will be updated by useEffect after setClientConfig
+        return DATASET_NAMES.VSET_TMDB as DatasetNameType;
     })
 
     // Sync selectedDataset with server config when it loads

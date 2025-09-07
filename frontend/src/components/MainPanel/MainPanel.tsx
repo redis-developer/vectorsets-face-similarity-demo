@@ -9,7 +9,6 @@ import NearestMatchResult from './NearestMatchResult/NearestMatchResult'
 import OtherMatchResults from './OtherMatchResults/OtherMatchResults'
 import PlaceholderContent from './PlaceholderContent/PlaceholderContent'
 import { useAppContext } from '@/contexts/AppContext'
-import { getClientConfig } from '@/utils/config'
 import { DATASETS_FILTERS } from '@/utils/constants'
 
 
@@ -27,11 +26,11 @@ const MainPanel: React.FC<MainPanelProps> = ({ selectedImage, onSetFilters, onCl
     const {
         isSearching,
         celebrityMatch,
-        otherMatches
+        otherMatches,
+        selectedDataset
     } = useAppContext()
 
-    const { currentDataset } = getClientConfig()
-    const searchFields = DATASETS_FILTERS[currentDataset]?.inputFields || [];
+    const searchFields = DATASETS_FILTERS[selectedDataset]?.inputFields || [];
 
     return (
         <div className={styles.mainPanel}>

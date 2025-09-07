@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import OtherMatchResults from '@/components/MainPanel/OtherMatchResults/OtherMatchResults'
 import { getSampleImages } from '@/utils/api'
 import type { IImageDoc } from '@/types'
+import { DATASET_NAMES } from '@/utils/constants'
 
 export default function OtherMatchResultsDemo() {
     const [sampleImages, setSampleImages] = useState<IImageDoc[]>([])
@@ -13,7 +14,9 @@ export default function OtherMatchResultsDemo() {
         const fetchSampleImages = async () => {
             try {
                 setLoading(true)
-                const response = await getSampleImages({})
+                const response = await getSampleImages({
+                    datasetName: DATASET_NAMES.VSET_TMDB
+                })
 
                 if (response.data) {
                     // Take more images to test scrolling

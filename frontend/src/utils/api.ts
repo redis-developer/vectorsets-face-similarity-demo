@@ -7,9 +7,9 @@ import {
   IGetSampleImagesInput,
   IVectorSetSearchResponse,
 } from "@/types";
-import type { IServerConfig } from "./constants";
+import type { IServerConfig, DatasetNameType } from "./constants";
 
-import { API_BASE_URL, IMAGE_BASE_URL, getClientConfig } from "./config";
+import { API_BASE_URL, IMAGE_BASE_URL } from "./config";
 import { DATASETS_FILTERS } from "./constants";
 import { showErrorToast } from "./toast";
 
@@ -86,9 +86,8 @@ const fixImageURLs = (images: IImageDoc[]) => {
   }));
 };
 
-const fixImageMeta = (images: IImageDoc[]) => {
-  const { currentDataset } = getClientConfig();
-  const datasetFilters = DATASETS_FILTERS[currentDataset];
+const fixImageMeta = (images: IImageDoc[], datasetName: DatasetNameType) => {
+  const datasetFilters = DATASETS_FILTERS[datasetName];
   const metaDisplayFields = datasetFilters?.metaDisplayFields || {};
 
   const retImages = images.map((image) => {
@@ -154,7 +153,10 @@ const getSampleImages = async (input: IGetSampleImagesInput) => {
 
   if (response?.data) {
     const fixedImages = fixImageURLs(response.data);
-    response.data = fixImageMeta(fixedImages);
+    response.data = fixImageMeta(
+      fixedImages,
+      input.datasetName as DatasetNameType
+    );
   }
 
   return response;
@@ -167,7 +169,10 @@ const existingElementSearch = async (input: IExistingElementSearchInput) => {
   );
   if (response?.data) {
     const fixedImages = fixImageURLs(response.data.queryResults);
-    response.data.queryResults = fixImageMeta(fixedImages);
+    response.data.queryResults = fixImageMeta(
+      fixedImages,
+      input.datasetName as DatasetNameType
+    );
   }
   return response;
 };
@@ -179,7 +184,10 @@ const newElementSearch = async (input: INewElementSearchInput) => {
   );
   if (response?.data) {
     const fixedImages = fixImageURLs(response.data.queryResults);
-    response.data.queryResults = fixImageMeta(fixedImages);
+    response.data.queryResults = fixImageMeta(
+      fixedImages,
+      input.datasetName as DatasetNameType
+    );
   }
   return response;
 };
