@@ -41,7 +41,7 @@ Modify these files to change default configurations:
 
 ### Database
 
-The database automatically loads the `database/redis-data/dump.rdb` file when using Docker.
+The database is automatically loaded with the `database/redis-data/dump.rdb` file when using Docker.
 
 For more detailed Docker instructions, see **DOCKER_README.md**.
 
