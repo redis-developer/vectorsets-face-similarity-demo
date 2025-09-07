@@ -41,7 +41,7 @@ services:
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/static:/app/static
-      - ./backend/node_modules/@huggingface:/app/node_modules/@huggingface
+      - hf_transformers_cache:/app/node_modules/@huggingface/transformers/.cache
     depends_on:
       redis:
         condition: service_started
@@ -64,5 +64,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-#volumes:
-#  redis_data:
+volumes:
+  #redis_data:
+  hf_transformers_cache:
