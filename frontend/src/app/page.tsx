@@ -40,7 +40,8 @@ function HomeContent() {
         setOtherMatches,
         searchFormData,
         setSearchFormData,
-        setLastQuery
+        setLastQuery,
+        selectedDataset
     } = useAppContext()
 
     useEffect(() => {
@@ -68,13 +69,15 @@ function HomeContent() {
                 response = await newElementSearch({
                     localImageUrl: image.src,
                     count: resultCount,
-                    filterQuery: filterQuery
+                    filterQuery: filterQuery,
+                    datasetName: selectedDataset
                 })
             } else {
                 response = await existingElementSearch({
                     id: image.id,
                     count: resultCount,
-                    filterQuery: filterQuery
+                    filterQuery: filterQuery,
+                    datasetName: selectedDataset
                 })
             }
 

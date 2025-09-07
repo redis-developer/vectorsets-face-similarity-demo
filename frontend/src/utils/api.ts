@@ -4,6 +4,7 @@ import {
   IImageDoc,
   IExistingElementSearchInput,
   INewElementSearchInput,
+  IGetSampleImagesInput,
   IVectorSetSearchResponse,
 } from "@/types";
 import type { IServerConfig } from "./constants";
@@ -145,8 +146,11 @@ const apiImageUpload = async (
   return response;
 };
 
-const getSampleImages = async () => {
-  const response = await apiPost<IImageDoc[]>(ENDPOINTS.GET_SAMPLE_IMAGES, {});
+const getSampleImages = async (input: IGetSampleImagesInput) => {
+  const response = await apiPost<IImageDoc[]>(
+    ENDPOINTS.GET_SAMPLE_IMAGES,
+    input
+  );
 
   if (response?.data) {
     const fixedImages = fixImageURLs(response.data);

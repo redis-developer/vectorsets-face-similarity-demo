@@ -8,6 +8,7 @@ import ImageCard from '../shared/ImageCard/ImageCard';
 import { getSampleImages } from '@/utils/api';
 import type { IImageDoc } from '@/types';
 import { MAX_UPLOAD_FILE_SIZE } from '@/utils/config';
+import { useAppContext } from '@/contexts/AppContext';
 
 type Props = {
     width?: number | string;
@@ -23,6 +24,7 @@ const LeftSidePanel: React.FC<Props> = ({
     onImageSelect,
     onImageUpload,
 }) => {
+    const { selectedDataset } = useAppContext();
     const [uploadedImage, setUploadedImage] = useState<IImageDoc | null>(null);
     const [availableImages, setAvailableImages] = useState<IImageDoc[]>([]);
     const [loading, setLoading] = useState(false);
@@ -33,7 +35,9 @@ const LeftSidePanel: React.FC<Props> = ({
             setLoading(true);
 
             try {
-                const response = await getSampleImages();
+                const response = await getSampleImages({
+                    datasetName: selectedDataset,
+                });
                 if (response.data) {
                     setAvailableImages(response.data);
                 }
@@ -46,7 +50,7 @@ const LeftSidePanel: React.FC<Props> = ({
         };
 
         fetchImages();
-    }, [refreshKey]);
+    }, [refreshKey, selectedDataset]);
 
     const handleImageUpload = (image: IImageDoc) => {
         image.fromUpload = true;

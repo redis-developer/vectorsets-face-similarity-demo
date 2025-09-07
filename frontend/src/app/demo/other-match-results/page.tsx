@@ -13,7 +13,7 @@ export default function OtherMatchResultsDemo() {
         const fetchSampleImages = async () => {
             try {
                 setLoading(true)
-                const response = await getSampleImages()
+                const response = await getSampleImages({})
 
                 if (response.data) {
                     // Take more images to test scrolling

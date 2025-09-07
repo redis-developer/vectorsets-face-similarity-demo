@@ -1,7 +1,9 @@
 'use client'
+import type { DatasetNameType } from '@/utils/constants'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import type { IImageDoc, SearchFormData } from '@/types'
+import { getClientConfig } from '@/utils/config'
 
 // Context
 const AppContext = createContext<{
@@ -17,6 +19,8 @@ const AppContext = createContext<{
     setSearchFormData: (data: SearchFormData) => void
     lastQuery: string
     setLastQuery: (query: string) => void
+    selectedDataset: DatasetNameType
+    setSelectedDataset: (dataset: DatasetNameType) => void
 } | null>(null)
 
 // Provider
@@ -27,6 +31,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [otherMatches, setOtherMatches] = useState<IImageDoc[]>([])
     const [searchFormData, setSearchFormData] = useState<SearchFormData>({})
     const [lastQuery, setLastQuery] = useState<string>('')
+    const [selectedDataset, setSelectedDataset] = useState<DatasetNameType>(() => {
+        const config = getClientConfig();
+        return config.currentDataset;
+    })
 
     return (
         <AppContext.Provider value={{
@@ -41,7 +49,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
             searchFormData,
             setSearchFormData,
             lastQuery,
-            setLastQuery
+            setLastQuery,
+            selectedDataset,
+            setSelectedDataset
         }}>
             {children}
         </AppContext.Provider>

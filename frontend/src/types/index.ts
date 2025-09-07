@@ -28,12 +28,18 @@ export interface IExistingElementSearchInput {
   id: string;
   count: number;
   filterQuery: string;
+  datasetName?: string;
 }
 
 export interface INewElementSearchInput {
   localImageUrl: string;
   count: number;
   filterQuery: string;
+  datasetName?: string;
+}
+
+export interface IGetSampleImagesInput {
+  datasetName?: string;
 }
 
 export interface SearchFormData {

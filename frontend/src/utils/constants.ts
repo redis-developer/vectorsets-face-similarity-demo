@@ -1,5 +1,28 @@
 import type { InputField } from "@/components/MainPanel/SearchBar/SearchBar";
 
+/**
+ // VSET_CELEB attributes
+ {
+ "elementId":"",
+ "label":"Aaron Eckhart",
+ "imagePath":"images/00000_Aaron_Eckhart.jpg",
+ "charCount":13
+ }
+
+ // VSET_TMDB attributes
+ {
+ "elementId":"",
+ "label":"Angeli Khang",
+ "imagePath":"images/000000_Angeli_Khang.jpg",
+ "charCount":12,
+ "imdbId":"nm13112435",
+ "department":"Acting",
+ "placeOfBirth":"Mandaluyong City, Philippines",
+ "popularity":207.229,
+ "country":"PHILIPPINES"
+ }
+ */
+
 const celebInputFields: InputField[] = [
   {
     label: "Name Length >=",
@@ -89,6 +112,17 @@ const DATASET_NAMES = {
   VSET_TMDB: "VSET_TMDB",
 } as const;
 
+const DATASETS_OPTIONS = [
+  {
+    label: "Celebrity 1000",
+    value: DATASET_NAMES.VSET_CELEB,
+  },
+  {
+    label: "TMDB 10k",
+    value: DATASET_NAMES.VSET_TMDB,
+  },
+];
+
 type DatasetNameType = (typeof DATASET_NAMES)[keyof typeof DATASET_NAMES];
 
 const DATASETS_FILTERS = {
@@ -107,6 +141,6 @@ interface IServerConfig {
 }
 type IClientConfig = IServerConfig;
 
-export { DATASET_NAMES, DATASETS_FILTERS };
+export { DATASET_NAMES, DATASETS_FILTERS, DATASETS_OPTIONS };
 
 export type { DatasetNameType, IClientConfig, IServerConfig };
