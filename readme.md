@@ -4,22 +4,19 @@ This project demonstrates face similarity search using **Redis VectorSets**. It 
 
 ## Quick Start
 
-### Clone
-
 ```bash
-
+# Clone the repository
 git clone https://github.com/PrasanKumar93/vectorsets-face-similarity.git
 cd vectorsets-face-similarity
 ```
 
-### Modify Environment Variables (optional)
+## Docker Setup (Recommended)
 
-Modify the environment files to change default configurations.
-`backend/.env.docker` and `frontend/.env.docker`
+### Prerequisites
 
-### Start with Docker
+- Docker and Docker Compose installed
 
-If you have **Docker** and **Docker Compose** installed, you can quickly start all services.
+### Start Services
 
 ```bash
 # Start all services
@@ -29,21 +26,35 @@ docker-compose up --build
 docker-compose down
 ```
 
-**Access the services at these URLs:**
+### Environment Configuration (Optional)
+
+Modify these files to change default configurations:
+
+- `backend/.env.docker`
+- `frontend/.env.docker`
+
+### Access URLs
 
 - **Frontend**: `http://localhost:3000`
 - **Backend**: `http://localhost:3001`
 - **Redis**: `localhost:6379`
 
-For more detailed instructions on using Docker, see the **DOCKER_README.md** file.
+### Database
 
-## 🔧 Local Development
+The database automatically loads the `database/redis-data/dump.rdb` file when using Docker.
 
-To run the services locally without Docker, follow these steps:
+For more detailed Docker instructions, see **DOCKER_README.md**.
+
+---
+
+## 🔧 Local Development Setup
+
+### Prerequisites
+
+- Node.js installed
+- Redis server running
 
 ### Backend Setup
-
-- (optional) update `backend/.env` file to change default configurations.
 
 ```bash
 cd backend
@@ -51,9 +62,9 @@ npm install
 npm run dev
 ```
 
-### Frontend Setup
+**Optional**: Update `backend/.env` file to change default configurations.
 
-- (optional) update `frontend/.env` file to change default configurations.
+### Frontend Setup
 
 ```bash
 cd frontend
@@ -61,12 +72,15 @@ npm install
 npm run dev
 ```
 
-## Database
+**Optional**: Update `frontend/.env` file to change default configurations.
 
-If you start with `docker-compose`, the database will automatically load the `database/redis-data/dump.rdb` file. Otherwise, follow these steps to load the data:
+### Database Setup
 
-1> Upload the `database/tmdb/output/tmdb.redis` and `database/celebrity-1000-embeddings/output/celebs.redis` files to your Redis database (e.g., `redis://localhost:6379`).
+Upload the following files to your Redis database (e.g., `redis://localhost:6379`):
 
-2> You can use the Bulk Actions -> Upload Data feature in Redis Insight.
+- `database/tmdb/output/tmdb.redis`
+- `database/celebrity-1000-embeddings/output/celebs.redis`
+
+You can use the **Bulk Actions → Upload Data** feature in Redis Insight:
 
 ![Redis Insight Upload](./docs/images/redis-insight-upload.png)
