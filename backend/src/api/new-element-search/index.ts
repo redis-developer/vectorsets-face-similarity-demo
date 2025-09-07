@@ -1,4 +1,4 @@
-import type { IImageDoc } from "../../types.js";
+import type { IDataset, IImageDoc } from "../../types.js";
 
 import { z } from "zod";
 
@@ -14,11 +14,10 @@ import {
 import { getImageEmbeddings } from "./image-embeddings.js";
 
 const buildQuery = async (
-  input: z.infer<typeof InputSchemas.newElementSearchInputSchema>
+  input: z.infer<typeof InputSchemas.newElementSearchInputSchema>,
+  dataset: IDataset,
+  datasetName: string
 ) => {
-  const config = getConfig();
-  const dataset = config.DATASETS[config.CURRENT_DATASET];
-
   const keyPrefix = dataset.VECTOR_SET.KEY;
   const DIM = dataset.VECTOR_SET.DIM;
   let filterQuery = "";
@@ -27,9 +26,9 @@ const buildQuery = async (
   }
   let imageEmbeddings: number[] = [];
 
-  if (config.CURRENT_DATASET === DATASET_NAMES.VSET_CELEB) {
+  if (datasetName === DATASET_NAMES.VSET_CELEB) {
     imageEmbeddings = await getCelebEmbedding(input.localImageUrl);
-  } else if (config.CURRENT_DATASET === DATASET_NAMES.VSET_TMDB) {
+  } else if (datasetName === DATASET_NAMES.VSET_TMDB) {
     imageEmbeddings = await getImageEmbeddings(input.localImageUrl);
   }
   const imageEmbeddingsStr = imageEmbeddings
@@ -57,10 +56,11 @@ const newElementSearch = async (
   const vInput = InputSchemas.newElementSearchInputSchema.parse(input); // validate input
 
   const config = getConfig();
-  const dataset = config.DATASETS[config.CURRENT_DATASET];
+  let datasetName = input.datasetName || config.CURRENT_DATASET;
+  const dataset = config.DATASETS[datasetName];
 
   const redisWrapperST = RedisWrapperST.getInstance();
-  const { query, sampleQuery } = await buildQuery(vInput);
+  const { query, sampleQuery } = await buildQuery(vInput, dataset, datasetName);
   const results = (await redisWrapperST.rawCommandExecute(query)) as any[];
   const objectResults = convertVectorSetSearchResultsToObjectArr(results);
 

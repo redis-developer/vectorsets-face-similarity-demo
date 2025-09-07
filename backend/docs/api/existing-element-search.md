@@ -7,7 +7,8 @@ POST http://localhost:3001/api/existingElementSearch
 {
   "id": "e1",
   "count": 20,
-  "filterQuery": ".charCount >= 5"
+  "filterQuery": ".charCount >= 5",
+  "datasetName": "VSET_CELEB"
 }
 ```
 

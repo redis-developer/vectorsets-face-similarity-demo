@@ -79,7 +79,7 @@ router.post("/getSampleImages", async (req: Request, res: Response) => {
   const input = req.body;
 
   try {
-    result.data = await getSampleImages();
+    result.data = await getSampleImages(input);
   } catch (err) {
     err = LoggerCls.getPureError(err);
     LoggerCls.error("/getSampleImages API failed !", err);

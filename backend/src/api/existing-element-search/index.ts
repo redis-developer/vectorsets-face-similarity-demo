@@ -1,4 +1,4 @@
-import type { IImageDoc } from "../../types.js";
+import type { IDataset, IImageDoc } from "../../types.js";
 
 import { z } from "zod";
 
@@ -11,11 +11,9 @@ import {
 } from "../common/index.js";
 
 const buildQuery = (
-  input: z.infer<typeof InputSchemas.existingElementSearchInputSchema>
+  input: z.infer<typeof InputSchemas.existingElementSearchInputSchema>,
+  dataset: IDataset
 ) => {
-  const config = getConfig();
-  const dataset = config.DATASETS[config.CURRENT_DATASET];
-
   const keyPrefix = dataset.VECTOR_SET.KEY;
   let filterQuery = "";
   if (input.filterQuery) {
@@ -30,10 +28,11 @@ const existingElementSearch = async (
   const vInput = InputSchemas.existingElementSearchInputSchema.parse(input); // validate input
 
   const config = getConfig();
-  const dataset = config.DATASETS[config.CURRENT_DATASET];
+  let datasetName = input.datasetName || config.CURRENT_DATASET;
+  const dataset = config.DATASETS[datasetName];
 
   const redisWrapperST = RedisWrapperST.getInstance();
-  let runQuery = buildQuery(vInput);
+  let runQuery = buildQuery(vInput, dataset);
   const results = (await redisWrapperST.rawCommandExecute(runQuery)) as any[];
   const objectResults = convertVectorSetSearchResultsToObjectArr(results);
 
