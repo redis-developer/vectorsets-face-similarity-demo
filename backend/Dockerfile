@@ -14,27 +14,27 @@ RUN if [ "$NODE_ENV" = "production" ]; then \
 # Copy package files
 COPY --chown=nodejs:nodejs package*.json ./
 
-# Install dependencies (all for dev, production-only for prod)
-ARG NODE_ENV=production
-RUN if [ "$NODE_ENV" = "production" ]; then \
-      npm ci --only=production; \
-    else \
-      npm ci; \
-    fi
+# Install dependencies
+RUN npm ci
 
 # Copy source code
 COPY --chown=nodejs:nodejs . .
 
-# Build for production if needed
-RUN if [ "$NODE_ENV" = "production" ]; then \
-      npm run build; \
-    fi
+# Build the application
+RUN npm run build
+
+# Set environment for runtime
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 # Create uploads directory
 RUN mkdir -p uploads
 
 # Expose port
 EXPOSE 3001
+
+# Set the NODE_ENV environment variable for runtime
+ENV NODE_ENV=${NODE_ENV}
 
 # Start command based on environment
 CMD if [ "$NODE_ENV" = "production" ]; then \
