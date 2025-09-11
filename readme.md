@@ -6,8 +6,8 @@ This project demonstrates face similarity search using **Redis VectorSets**. It 
 
 ```bash
 # Clone the repository
-git clone https://github.com/PrasanKumar93/vectorsets-face-similarity.git
-cd vectorsets-face-similarity
+git clone https://github.com/redis-developer/vectorsets-face-similarity-demo.git
+cd vectorsets-face-similarity-demo
 ```
 
 ## Docker Setup (Recommended)
@@ -76,23 +76,4 @@ npm run dev
 
 ### Database Setup
 
-Install git lfs for large files handling
-
-```bash
-# Install Git LFS
-# macOS: brew install git-lfs
-# Ubuntu: sudo apt-get install git-lfs
-# Windows: choco install git-lfs
-
-git lfs install
-git lfs pull
-```
-
-Upload the following files to your Redis database (e.g., `redis://localhost:6379`):
-
-- `database/tmdb/output/tmdb.redis`
-- `database/celebrity-1000-embeddings/output/celebs.redis`
-
-You can use the **Bulk Actions → Upload Data** feature in Redis Insight:
-
-![Redis Insight Upload](./docs/images/redis-insight-upload.png)
+Use `database/redis-data/dump.rdb` as the Redis database.
