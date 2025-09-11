@@ -76,6 +76,18 @@ npm run dev
 
 ### Database Setup
 
+Install git lfs for large files handling
+
+```bash
+# Install Git LFS
+# macOS: brew install git-lfs
+# Ubuntu: sudo apt-get install git-lfs
+# Windows: choco install git-lfs
+
+git lfs install
+git lfs pull
+```
+
 Upload the following files to your Redis database (e.g., `redis://localhost:6379`):
 
 - `database/tmdb/output/tmdb.redis`
