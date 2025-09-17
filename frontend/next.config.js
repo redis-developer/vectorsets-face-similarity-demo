@@ -7,13 +7,13 @@ const nextConfig = {
             {
                 protocol: 'http',
                 hostname: process.env.API_HOST || 'localhost',
-                port: process.env.NEXT_PUBLIC_API_PORT || '3001',
+                port: process.env.NEXT_PUBLIC_API_PORT ?? '3001',
                 pathname: '/api/uploads/**',
             },
             {
                 protocol: 'http',
                 hostname: process.env.API_HOST || 'localhost',
-                port: process.env.NEXT_PUBLIC_API_PORT || '3001',
+                port: process.env.NEXT_PUBLIC_API_PORT ?? '3001',
                 pathname: '/api/static/**',
             },
         ],

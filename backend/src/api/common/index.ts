@@ -95,7 +95,7 @@ const formatImageResults = (results: any[], imagePrefix: string) => {
 const resolveRemoteImagePath = (imagePath: string): string => {
   // Handle localhost URLs by removing /api prefix
   let processedImagePath = imagePath;
-  if (imagePath.startsWith("http:")) {
+  if (imagePath.startsWith("http:") || imagePath.startsWith("https:")) {
     const url = new URL(imagePath);
     if (url.pathname.startsWith("/api")) {
       processedImagePath = url.pathname.substring(4); // Remove /api prefix

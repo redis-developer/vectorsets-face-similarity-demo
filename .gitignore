@@ -1,3 +1,5 @@
+Makefile
+*.env.yml
 # macOS system files
 .DS_Store
 .AppleDouble
