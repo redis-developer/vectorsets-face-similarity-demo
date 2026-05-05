@@ -21,4 +21,4 @@ git lfs ls-files
 
 echo ""
 echo "Setup complete! LFS files are ready."
-echo "Run './start.sh' to start the application."
+echo "Run 'docker compose up -d' to start the application."
