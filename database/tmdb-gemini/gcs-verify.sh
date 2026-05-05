@@ -3,7 +3,7 @@
 # Quick verification that the GCS bucket is set up correctly
 # and images are publicly accessible.
 #
-# Usage:  ./scripts/gcs-verify.sh
+# Usage:  ./gcs-verify.sh
 
 set -euo pipefail
 

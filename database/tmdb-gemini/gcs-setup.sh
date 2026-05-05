@@ -3,7 +3,7 @@
 # Create (or verify) the GCS bucket for face images and make it public.
 # Idempotent — safe to run multiple times.
 #
-# Usage:  ./scripts/gcs-setup.sh
+# Usage:  ./gcs-setup.sh
 #
 # Prerequisites: gcloud CLI authenticated with sufficient IAM permissions.
 

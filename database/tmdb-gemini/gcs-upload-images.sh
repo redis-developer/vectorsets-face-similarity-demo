@@ -3,10 +3,10 @@
 # Upload face images to the GCS bucket.
 #
 # Usage:
-#   ./scripts/gcs-upload-images.sh                       # upload all (single stream)
-#   ./scripts/gcs-upload-images.sh --parallel 8          # upload with 8 parallel streams
-#   ./scripts/gcs-upload-images.sh /path/to/images/      # upload from a specific dir
-#   ./scripts/gcs-upload-images.sh /path/to/images/ --parallel 4
+#   ./gcs-upload-images.sh                       # upload all (single stream)
+#   ./gcs-upload-images.sh --parallel 8          # upload with 8 parallel streams
+#   ./gcs-upload-images.sh /path/to/images/      # upload from a specific dir
+#   ./gcs-upload-images.sh /path/to/images/ --parallel 4
 #
 # Prerequisites: gcloud CLI authenticated; bucket already created (run gcs-setup.sh first).
 
@@ -16,8 +16,7 @@ BUCKET="redis-vectorsets-face-images"
 GS_DEST="gs://${BUCKET}/faces/images/"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-DEFAULT_SRC="${REPO_ROOT}/app/server/static/faces/images/"
+DEFAULT_SRC="${SCRIPT_DIR}/output/images-hq/"
 
 PARALLEL=1
 SRC_DIR="${DEFAULT_SRC}"
