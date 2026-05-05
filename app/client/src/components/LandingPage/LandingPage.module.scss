@@ -1,0 +1,225 @@
+@use '../../styles/colors.scss';
+@use '../../styles/typography.scss';
+@use '../../styles/variables.scss';
+@use '../../styles/mixins.scss';
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.landingPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.heading {
+  align-self: flex-start;
+  margin: 0 0 variables.$space-sm;
+  color: colors.$fg-default;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-2xl;
+  font-weight: typography.$font-weight-regular;
+  line-height: typography.$line-tight;
+}
+
+.step {
+  align-self: flex-start;
+  margin: 0 0 variables.$space-sm;
+  color: colors.$fg-body;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-md;
+  font-weight: typography.$font-weight-regular;
+  line-height: typography.$line-normal;
+}
+
+.stepNumber {
+  color: colors.$fg-default;
+  font-weight: typography.$font-weight-regular;
+}
+
+.inlineDropdown {
+  display: block;
+  min-width: 224px;
+  width: fit-content;
+  padding: 4px 32px 4px 12px;
+  margin-top: variables.$space-2;
+  border: 1px solid colors.$border-subtle;
+  border-radius: 2.5px;
+  background: colors.$surface-02;
+  color: colors.$dusk-01;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-rg;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='11' height='6' viewBox='0 0 11 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.647 5.354L0 0.707L0.708 0L5.354 4.647L10 0L10.708 0.707L6.061 5.354H4.647Z' fill='%238A99A0'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: colors.$dusk-50;
+    background-color: colors.$surface-03;
+    background-image: url("data:image/svg+xml,%3Csvg width='11' height='6' viewBox='0 0 11 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.647 5.354L0 0.707L0.708 0L5.354 4.647L10 0L10.708 0.707L6.061 5.354H4.647Z' fill='%238A99A0'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring(colors.$yellow);
+  }
+
+  option {
+    background: colors.$surface-01;
+    color: colors.$fg-default;
+  }
+}
+
+.orDivider {
+  margin: variables.$space-sm 0;
+  color: colors.$fg-muted;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-rg;
+  font-weight: typography.$font-weight-regular;
+}
+
+.selfieButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 240px;
+  padding: 12px 24px;
+  border: 1px solid colors.$hyper-06;
+  border-radius: variables.$radius-5;
+  background: transparent;
+  color: colors.$fg-default;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-md;
+  font-weight: typography.$font-weight-medium;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    background: colors.$hyper-09;
+    border-color: colors.$hyper-05;
+  }
+
+  &:active {
+    background: colors.$hyper-09;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring(colors.$hyper-05);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pickLabel {
+  margin: variables.$space-sm 0 variables.$space-xs;
+  color: colors.$fg-body;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-md;
+  font-weight: typography.$font-weight-medium;
+}
+
+.gridHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: variables.$space-xs;
+}
+
+.refreshButton {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  @include mixins.button-secondary(50%, 0, 0);
+
+  &:disabled {
+    opacity: 0.45;
+  }
+}
+
+.refreshIcon {
+  display: inline-block;
+  color: colors.$fg-body;
+
+  &.spinning {
+    animation: spin 1s linear infinite;
+  }
+}
+
+.celebrityGridContainer {
+  width: 100%;
+}
+
+.celebrityGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.loadingState,
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 200px;
+  color: colors.$fg-muted;
+
+  p {
+    font-size: typography.$font-size-rg;
+    color: colors.$fg-body;
+    font-weight: typography.$font-weight-medium;
+  }
+}
+
+@media (max-width: 900px) {
+  .celebrityGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .landingPage {
+    padding: 24px 16px;
+  }
+
+  .heading {
+    font-size: typography.$font-size-xl;
+  }
+
+  .step {
+    font-size: typography.$font-size-rg;
+  }
+
+  .celebrityGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .selfieButton {
+    width: 100%;
+  }
+}

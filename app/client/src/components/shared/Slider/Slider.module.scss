@@ -1,0 +1,117 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+
+$thumb-size: 16px;
+$track-height: 6px;
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+
+  .label {
+    font-size: typography.$font-size-rg;
+    font-weight: typography.$font-weight-medium;
+    color: colors.$fg-body;
+  }
+
+  .trackWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .trackInner {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .track {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: $track-height;
+    border-radius: $track-height;
+    background: linear-gradient(
+      to right,
+      colors.$yellow-07 0%,
+      colors.$yellow-07 var(--fill),
+      colors.$surface-03 var(--fill),
+      colors.$surface-03 100%
+    );
+    outline: none;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: $thumb-size;
+      height: $thumb-size;
+      border-radius: 50%;
+      background: colors.$yellow;
+      border: 2px solid colors.$bg-default;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    &::-moz-range-thumb {
+      width: $thumb-size;
+      height: $thumb-size;
+      border-radius: 50%;
+      background: colors.$yellow;
+      border: 2px solid colors.$bg-default;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid colors.$yellow-07;
+      outline-offset: 2px;
+    }
+  }
+
+  .bubble {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    min-width: 3ch;
+    padding: 3px 8px;
+    font-size: typography.$font-size-xs;
+    font-weight: typography.$font-weight-semibold;
+    font-family: typography.$font-mono;
+    color: colors.$fg-default;
+    background: colors.$surface-03;
+    border: 1px solid colors.$border-subtle;
+    border-radius: variables.$radius-4;
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .maxLabel {
+    font-size: typography.$font-size-xs;
+    color: colors.$fg-muted;
+    font-family: typography.$font-mono;
+    flex-shrink: 0;
+  }
+
+  .spacer {
+    font-size: typography.$font-size-rg;
+    line-height: 1;
+    visibility: hidden;
+  }
+}

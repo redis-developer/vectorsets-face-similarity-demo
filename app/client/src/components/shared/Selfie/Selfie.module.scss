@@ -1,0 +1,381 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
+
+.selfie {
+  display: flex;
+  flex-direction: column;
+  gap: variables.$space-2;
+
+  &__button {
+    @include mixins.button-primary(variables.$radius-5, 0.5rem, 0.75rem);
+    width: 100%;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    margin-right: variables.$space-1;
+  }
+
+  &__camera,
+  &__crop,
+  &__preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: variables.$space-3;
+  }
+
+  &__video-container,
+  &__image-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    min-height: 200px;
+    max-height: 300px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid colors.$border;
+    border-radius: variables.$radius-5;
+    background: colors.$surface-02;
+  }
+
+  &__video {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: variables.$radius-5;
+    background: colors.$surface-02;
+
+    &--mirrored {
+      transform: scaleX(-1);
+    }
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: variables.$radius-5;
+
+    &--mirrored {
+      transform: scaleX(-1);
+    }
+  }
+
+  &__video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: variables.$space-3;
+    padding: variables.$space-xs;
+    border-radius: variables.$radius-5;
+    color: colors.$fg-muted;
+    font-size: typography.$font-size-rg;
+    text-align: center;
+    background: rgba(colors.$surface-01, 0.55);
+  }
+
+  &__loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid colors.$border-subtle;
+    border-top: 3px solid colors.$hyper-06;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  &__controls,
+  &__crop-actions,
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: variables.$space-3;
+  }
+
+  &__capture,
+  &__apply-crop,
+  &__crop-button,
+  &__upload {
+    @include mixins.button-primary(variables.$radius-5, 0.5rem, 0.75rem);
+    display: inline-flex;
+    align-items: center;
+    gap: variables.$space-2;
+  }
+
+  &__cancel,
+  &__cancel-crop,
+  &__retake {
+    @include mixins.button-secondary(variables.$radius-5, 0.5rem, 0.75rem);
+    display: inline-flex;
+    align-items: center;
+    gap: variables.$space-2;
+  }
+
+  &__mirror-control {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  &__mirror-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: variables.$space-2;
+    cursor: pointer;
+    user-select: none;
+    color: colors.$fg-body;
+    font-family: typography.$font-primary;
+    font-size: typography.$font-size-rg;
+  }
+
+  &__mirror-box {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+
+    input[type='checkbox'] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      appearance: none;
+      cursor: pointer;
+      border: 2px solid colors.$border-subtle;
+      border-radius: variables.$radius-4;
+      background: colors.$surface-01;
+      transition: all 0.2s ease;
+
+      &:checked {
+        border-color: colors.$hyper-06;
+        background: colors.$hyper-09;
+      }
+
+      &:hover {
+        border-color: colors.$yellow-07;
+      }
+
+      &:focus-visible {
+        @include mixins.focus-ring(colors.$yellow);
+      }
+    }
+  }
+
+  &__mirror-check {
+    position: relative;
+    color: colors.$base-white;
+    pointer-events: none;
+  }
+
+  &__mirror-label {
+    color: colors.$fg-body;
+    font-size: typography.$font-size-rg;
+    font-weight: typography.$font-weight-medium;
+  }
+
+  &__crop-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: variables.$radius-8;
+  }
+
+  &__crop-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: variables.$radius-8;
+  }
+
+  &__crop-overlay {
+    position: absolute;
+    min-width: 50px;
+    min-height: 50px;
+    cursor: move;
+    border: 2px solid colors.$hyper-05;
+    box-shadow: 0 0 0 9999px rgba(colors.$base-black, 0.55);
+  }
+
+  &__crop-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 2px solid colors.$base-white;
+    border-radius: 50%;
+    background: colors.$hyper-06;
+
+    &[data-handle='nw'] {
+      top: -6px;
+      left: -6px;
+      cursor: nw-resize;
+    }
+
+    &[data-handle='ne'] {
+      top: -6px;
+      right: -6px;
+      cursor: ne-resize;
+    }
+
+    &[data-handle='sw'] {
+      bottom: -6px;
+      left: -6px;
+      cursor: sw-resize;
+    }
+
+    &[data-handle='se'] {
+      right: -6px;
+      bottom: -6px;
+      cursor: se-resize;
+    }
+
+    &:hover {
+      transform: scale(1.15);
+      background: colors.$hyper-04;
+    }
+  }
+
+  &__error {
+    padding: variables.$space-2;
+    border: 1px solid colors.$hyper-06;
+    border-radius: variables.$radius-8;
+    background: rgba(colors.$hyper-09, 0.35);
+    color: colors.$hyper-04;
+    font-size: typography.$font-size-rg;
+    text-align: center;
+  }
+
+  &__modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: variables.$z-modal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: variables.$space-4;
+    background: rgba(colors.$base-black, 0.65);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  &__modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    height: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    border: 1px solid colors.$border;
+    border-radius: variables.$radius-16;
+    background: colors.$surface-01;
+    box-shadow: colors.$shadow-lg;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  &__modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: variables.$space-4 variables.$space-5;
+    border-bottom: 1px solid colors.$border;
+    background: colors.$surface-02;
+  }
+
+  &__modal-title {
+    margin: 0;
+    color: colors.$fg-default;
+    font-family: typography.$font-primary;
+    font-size: typography.$font-size-lg;
+    font-weight: typography.$font-weight-semibold;
+  }
+
+  &__modal-close {
+    @include mixins.button-secondary(variables.$radius-5, 0, 0);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: typography.$font-size-lg;
+    line-height: 1;
+  }
+
+  &__modal-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: variables.$space-5;
+    overflow-y: auto;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .selfie {
+    &__modal-overlay {
+      padding: variables.$space-2;
+    }
+
+    &__modal-content {
+      height: 450px;
+      max-height: 95vh;
+    }
+
+    &__modal-header {
+      padding: variables.$space-3 variables.$space-4;
+    }
+
+    &__modal-body {
+      padding: variables.$space-4;
+    }
+
+    &__video {
+      height: 250px;
+    }
+  }
+}

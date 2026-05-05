@@ -1,0 +1,108 @@
+@use './colors.scss';
+@use './typography.scss';
+@use './variables.scss';
+
+@mixin focus-ring($color: colors.$yellow) {
+  outline: none;
+}
+
+@mixin button-base(
+  $radius: variables.$radius-5,
+  $padding-y: 0.625rem,
+  $padding-x: 1.5rem
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: variables.$space-2;
+  border: 1px solid transparent;
+  border-radius: $radius;
+  padding: $padding-y $padding-x;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-rg;
+  font-weight: typography.$font-weight-medium;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+}
+
+@mixin button-primary(
+  $radius: variables.$radius-5,
+  $padding-y: 0.625rem,
+  $padding-x: 1.5rem
+) {
+  @include button-base($radius, $padding-y, $padding-x);
+  background: colors.$btn-primary-bg;
+  border-color: colors.$btn-primary-border;
+  color: colors.$btn-primary-fg;
+
+  &:hover:not(:disabled) {
+    background: colors.$btn-primary-hover-bg;
+    border-color: colors.$btn-primary-hover-border;
+  }
+
+  &:active:not(:disabled) {
+    background: colors.$btn-primary-hover-bg;
+    border-color: colors.$btn-primary-hover-border;
+    transform: translateY(1px);
+  }
+}
+
+@mixin button-secondary(
+  $radius: variables.$radius-5,
+  $padding-y: 0.625rem,
+  $padding-x: 1.5rem
+) {
+  @include button-base($radius, $padding-y, $padding-x);
+  background: colors.$btn-secondary-bg;
+  border-color: colors.$btn-secondary-border;
+  color: colors.$btn-secondary-fg;
+
+  &:hover:not(:disabled) {
+    background: colors.$btn-secondary-hover-bg;
+    border-color: colors.$btn-secondary-hover-border;
+  }
+
+  &:active:not(:disabled) {
+    background: colors.$btn-secondary-hover-bg;
+    border-color: colors.$btn-secondary-hover-border;
+    transform: translateY(1px);
+  }
+}
+
+@mixin scrollbar-dark($size: 8px) {
+  &::-webkit-scrollbar {
+    width: $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: colors.$surface-02;
+    border-radius: variables.$radius-4;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: colors.$dusk-50;
+    border-radius: variables.$radius-4;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: colors.$dusk-30;
+  }
+}

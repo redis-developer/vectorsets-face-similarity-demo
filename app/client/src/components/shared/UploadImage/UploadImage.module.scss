@@ -1,0 +1,40 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
+
+.uploadImage {
+  display: flex;
+  flex-direction: column;
+  gap: variables.$space-2;
+
+  &__input {
+    display: none;
+  }
+
+  &__button {
+    @include mixins.button-primary(variables.$radius-5, 0.5rem, 0.75rem);
+    width: 100%;
+    white-space: nowrap;
+
+    &:disabled {
+      box-shadow: none;
+    }
+  }
+
+  &__error {
+    color: colors.$hyper-04;
+    font-size: typography.$font-size-rg;
+  }
+
+  &__hint {
+    color: colors.$fg-muted;
+    font-size: typography.$font-size-xs;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    margin-right: variables.$space-1;
+  }
+}

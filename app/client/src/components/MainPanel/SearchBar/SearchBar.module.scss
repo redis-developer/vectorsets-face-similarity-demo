@@ -1,0 +1,146 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
+
+.searchBar {
+  padding: variables.$space-xs;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: variables.$space-xs;
+}
+
+.fieldsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  gap: variables.$space-xs;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 150px;
+
+  &[data-width] {
+    flex: none;
+  }
+
+  &[data-label-position='left'] {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    .label {
+      margin-bottom: 0;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .input,
+    .selectWrapper {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+}
+
+.label {
+  margin-bottom: 4px;
+  font-size: typography.$font-size-rg;
+  font-weight: typography.$font-weight-medium;
+  color: colors.$fg-body;
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 12px 12px;
+  border: 1px solid colors.$border-subtle;
+  border-radius: variables.$radius-4;
+  font-size: typography.$font-size-rg;
+  background: colors.$surface-02;
+  color: colors.$fg-default;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: colors.$dusk-50;
+  }
+
+  &:focus-visible {
+    border-color: colors.$yellow-07;
+    @include mixins.focus-ring(colors.$yellow);
+  }
+
+  &::placeholder {
+    color: colors.$fg-muted;
+  }
+}
+
+.selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select {
+  appearance: none;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+.selectIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: colors.$fg-muted;
+  pointer-events: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.searchButton {
+  @include mixins.button-primary(variables.$radius-5, 0.5rem, 0.75rem);
+}
+
+.clearButton {
+  @include mixins.button-secondary(variables.$radius-5, 0.5rem, 0.75rem);
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .fieldGroup {
+    min-width: auto;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .searchButton,
+  .clearButton {
+    flex: 1;
+  }
+}

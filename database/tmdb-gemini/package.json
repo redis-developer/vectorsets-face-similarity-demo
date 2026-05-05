@@ -1,0 +1,21 @@
+{
+  "name": "tmdb-gemini-pipeline",
+  "version": "1.0.0",
+  "description": "Pipeline: fetch HQ TMDB images, crop faces, embed with Gemini, seed Redis",
+  "type": "module",
+  "scripts": {
+    "fetch": "node 01-fetch-hq.js",
+    "crop": "python3 02-crop-faces.py",
+    "embed": "node 03-embed-gemini.js",
+    "redis:create": "node 04-create-redis-file.js",
+    "redis:load": "node 05-run-redis-file.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^1.50.1",
+    "dotenv": "^17.2.1",
+    "redis": "^5.12.1"
+  }
+}

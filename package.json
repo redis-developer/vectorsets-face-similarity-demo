@@ -1,0 +1,46 @@
+{
+  "name": "vectorsets-face-similarity-demo",
+  "private": true,
+  "workspaces": [
+    "app/client",
+    "app/server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "npm run dev -w app/client",
+    "dev:server": "npm run dev -w app/server",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "npm run build -w app/client",
+    "build:server": "npm run build -w app/server",
+    "start": "npm run start -w app/server",
+    "test": "npm run test:client && npm run test:server",
+    "test:client": "npm run test -w app/client",
+    "test:server": "docker compose up -d redis && npm run test -w app/server && docker compose down redis",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "prettier": "^3.8.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "printWidth": 80,
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "overrides": [
+      {
+        "files": [
+          "*.md"
+        ],
+        "options": {
+          "tabWidth": 4
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+
+.nearestMatchResult {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: variables.$space-xs;
+  padding: variables.$space-xs 12px;
+  flex-shrink: 0;
+}
+
+.selectedPhotoSection,
+.celebrityMatchSection {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 0.5rem;
+}
+
+.sectionLabel {
+  margin: 0 0 0.25rem;
+  color: colors.$fg-body;
+  font-family: typography.$font-secondary;
+  font-size: typography.$font-size-xs;
+  font-weight: typography.$font-weight-regular;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.imageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 0.5rem 0 0.75rem;
+}
+
+.emptyImagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 260px;
+  height: 260px;
+  box-sizing: border-box;
+  border: 1px dashed colors.$border-subtle;
+  border-radius: variables.$radius-5;
+  background: rgba(colors.$surface-02, 0.45);
+  color: colors.$fg-muted;
+  font-size: typography.$font-size-rg;
+  text-align: center;
+}
+
+.matchingSection {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  min-height: 260px;
+  gap: 0.5rem;
+  padding: 0;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 300px;
+  padding: 0.5rem 1rem;
+  border: 1px solid colors.$hyper-06;
+  border-radius: variables.$radius-5;
+  background: rgba(colors.$hyper-09, 0.35);
+  color: colors.$base-white;
+  font-size: typography.$font-size-rg;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .nearestMatchResult {
+    flex-direction: column;
+    gap: 1rem;
+    height: auto;
+    min-height: 200px;
+    padding: 0.75rem;
+  }
+
+  .selectedPhotoSection,
+  .celebrityMatchSection {
+    max-width: none;
+  }
+
+  .sectionLabel {
+    font-size: typography.$font-size-rg;
+  }
+
+  .imageContainer {
+    min-height: 120px;
+  }
+
+  .emptyImagePlaceholder {
+    width: 120px;
+    height: 120px;
+    font-size: typography.$font-size-xs;
+  }
+}

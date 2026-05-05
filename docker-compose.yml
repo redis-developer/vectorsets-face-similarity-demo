@@ -1,0 +1,29 @@
+services:
+  redis:
+    container_name: redis
+    image: 'redis:alpine'
+    ports:
+      - 6379:6379
+    volumes:
+      #- redis_data:/data
+      - ./database/redis-data:/data:ro
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV:-production}
+        BASE_PATH: ${BASE_PATH:-}
+    container_name: vectorsets-app
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_started
+    restart: unless-stopped

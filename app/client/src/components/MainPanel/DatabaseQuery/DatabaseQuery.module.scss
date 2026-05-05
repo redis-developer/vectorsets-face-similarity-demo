@@ -1,0 +1,23 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+
+.queryContent {
+  min-height: 40px;
+  padding: 8px variables.$space-xs;
+
+  .queryText {
+    display: block;
+    margin: 0;
+    padding: 6px 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.45;
+    font-family: typography.$font-secondary;
+    font-size: typography.$font-size-xs;
+    color: colors.$fg-body;
+    background: rgba(colors.$surface-01, 0.85);
+    border: 1px solid colors.$border;
+    border-radius: variables.$radius-4;
+  }
+}

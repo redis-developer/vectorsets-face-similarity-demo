@@ -1,0 +1,75 @@
+@use './styles/fonts.scss';
+@use './styles/colors.scss';
+@use './styles/typography.scss';
+
+:root {
+  --primary-font: 'Space Grotesk', sans-serif;
+  --secondary-font: 'Space Mono', monospace;
+
+  --bg-default: #{colors.$bg-default};
+  --surface-01: #{colors.$surface-01};
+  --surface-02: #{colors.$surface-02};
+  --surface-03: #{colors.$surface-03};
+
+  --fg-default: #{colors.$fg-default};
+  --fg-body: #{colors.$fg-body};
+  --fg-muted: #{colors.$fg-muted};
+  --fg-brand: #{colors.$fg-brand};
+  --border: #{colors.$border};
+  --stroke-divider: #{colors.$stroke-divider};
+
+  --background-color: var(--bg-default);
+  --text-color: var(--fg-default);
+  --muted-color: var(--fg-muted);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+html {
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: colors.$midnight;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(
+    180deg,
+    colors.$midnight 0%,
+    colors.$dusk-09 100%
+  );
+  color: var(--text-color);
+  font-family: var(--primary-font);
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  color: #{colors.$midnight};
+  background: #{colors.$yellow-50};
+}

@@ -1,0 +1,60 @@
+@use '../../styles/colors.scss';
+@use '../../styles/typography.scss';
+@use '../../styles/variables.scss';
+@use '../../styles/mixins.scss';
+
+.resultsView {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.resultsView > *:not(:last-child) {
+  flex-shrink: 0;
+
+  &:not(:nth-child(2)) {
+    border-bottom: 1px solid colors.$border;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: variables.$space-2 variables.$space-xs;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  border-radius: variables.$radius-5;
+  background: transparent;
+  color: colors.$fg-default;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background: colors.$surface-03;
+    color: colors.$yellow;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring(colors.$yellow);
+  }
+}
+
+.datasetLabel {
+  color: colors.$fg-muted;
+  font-family: typography.$font-secondary;
+  font-size: typography.$font-size-rg;
+  font-weight: typography.$font-weight-medium;
+}

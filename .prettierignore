@@ -1,0 +1,7 @@
+.agents
+.cursor
+dist
+docs
+static
+public
+**/node_modules

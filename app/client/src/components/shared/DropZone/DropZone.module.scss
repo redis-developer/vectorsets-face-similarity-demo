@@ -1,0 +1,101 @@
+@use '../../../styles/colors.scss';
+@use '../../../styles/typography.scss';
+@use '../../../styles/variables.scss';
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dropZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 240px;
+  padding: variables.$space-lg variables.$space-sm;
+  border: 2px dashed colors.$border-subtle;
+  border-radius: variables.$radius-5;
+  background: transparent;
+  cursor: default;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &.dragActive {
+    border-color: colors.$fg-brand;
+    background: rgba(colors.$surface-02, 0.5);
+  }
+
+  &.busy {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: variables.$space-xs;
+}
+
+.icon {
+  color: colors.$fg-muted;
+}
+
+.text {
+  margin: 0;
+  color: colors.$fg-body;
+  font-family: typography.$font-primary;
+  font-size: typography.$font-size-md;
+  font-weight: typography.$font-weight-medium;
+}
+
+.browseLink {
+  all: unset;
+  color: colors.$fg-default;
+  font-weight: typography.$font-weight-semibold;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: colors.$fg-brand;
+  }
+
+  &:focus-visible {
+    outline: 2px solid colors.$yellow;
+    outline-offset: 2px;
+    border-radius: 2.5px;
+  }
+}
+
+.uploadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: variables.$space-xs;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid colors.$border-subtle;
+  border-top-color: colors.$fg-brand;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.uploadingText {
+  color: colors.$fg-body;
+  font-family: typography.$font-secondary;
+  font-size: typography.$font-size-rg;
+  font-weight: typography.$font-weight-regular;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
