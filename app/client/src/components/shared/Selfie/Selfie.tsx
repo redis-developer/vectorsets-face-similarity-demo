@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useEffect, useId } from 'react';
 import { X, Camera, Crop, RotateCcw, Check } from 'lucide-react';
 import styles from './Selfie.module.scss';
 import { apiImageUpload } from '../../../utils/api';
@@ -30,6 +30,7 @@ const Selfie: React.FC<Props> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream>(null);
+  const dialogTitleId = useId();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -343,11 +344,16 @@ const Selfie: React.FC<Props> = ({
         >
           <div
             className={styles['selfie__modal-content']}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={dialogTitleId}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className={styles['selfie__modal-header']}>
-              <h3 className={styles['selfie__modal-title']}>Take a selfie</h3>
+              <h3 id={dialogTitleId} className={styles['selfie__modal-title']}>
+                Take a selfie
+              </h3>
               <button
                 type="button"
                 className={styles['selfie__modal-close']}
