@@ -136,7 +136,12 @@ const ImageDetailCard: React.FC<Props> = ({
 
   return (
     <div className={styles.container} style={{ width: `${width}px` }}>
-      <div className={styles.imageCardWrapper} onClick={handleCardClick}>
+
+      <div
+        className={`${styles.imageCardWrapper}${onSelect ? ` ${styles.clickable}` : ''}`}
+        onClick={handleCardClick}
+      >
+
         <ImageCard
           image={image}
           selected={selected}
@@ -177,9 +182,8 @@ const ImageDetailCard: React.FC<Props> = ({
           <div
             ref={tooltipRef}
             role="tooltip"
-            className={`${styles.metaPanel} ${
-              tooltipPosition?.placement === 'left' ? styles.metaPanelLeft : styles.metaPanelRight
-            }`}
+            className={`${styles.metaPanel} ${tooltipPosition?.placement === 'left' ? styles.metaPanelLeft : styles.metaPanelRight
+              }`}
             style={{
               top: tooltipPosition?.top ?? 0,
               left: tooltipPosition?.left ?? 0,
