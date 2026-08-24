@@ -29,7 +29,8 @@ app.use(
   `${BASE_PATH}/static`,
   express.static(path.join(config.ROOT_DIR, 'static')),
 );
-app.use(BASE_PATH || '/', express.static('../dist'));
+const webDist = path.resolve(config.ROOT_DIR, '../dist');
+app.use(BASE_PATH || '/', express.static(webDist));
 app.listen(Number(PORT), async () => {
   logInfo(`Server running on port ${PORT}`);
   const redisWrapperST = RedisWrapperST.setInstance(REDIS_URL);

@@ -1,6 +1,9 @@
 {
   "name": "vectorsets-face-similarity-demo",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": [
     "app/client",
     "app/server"
