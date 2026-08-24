@@ -42,3 +42,5 @@ temp/
 
 # Redis temp files
 database/redis-data/temp-*.rdb
+
+temp/

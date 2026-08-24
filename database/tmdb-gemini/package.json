@@ -9,7 +9,8 @@
     "embed": "node 03-embed-gemini.js",
     "redis:create": "node 04-create-redis-file.js",
     "redis:load": "node 05-run-redis-file.js",
-    "redis:stream": "node 06-export-from-dump.js"
+    "redis:stream": "node 06-export-from-dump.js",
+    "redis:resume": "node 06-export-from-dump.js --resume"
   },
   "keywords": [],
   "author": "",

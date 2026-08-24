@@ -15,6 +15,7 @@
  *   --batch <n>      VRANGE page size     (default: 50)
  *   --limit <n>      Max elements to copy (default: unlimited)
  *   --flush          DEL target vset before loading
+ *   --resume         Skip already-loaded prefix using target VCARD + source lex order
  *   --dry-run        Count elements only, no writes
  */
 
@@ -43,16 +44,23 @@ const LIMIT = process.argv.includes('--limit')
   ? Number(argVal('--limit', '0'))
   : null;
 const FLUSH = process.argv.includes('--flush');
+const RESUME = process.argv.includes('--resume');
 const DRY_RUN = process.argv.includes('--dry-run');
 const ERROR_LOG = path.join(__dirname, 'output', 'stream-errors.log');
+const PROGRESS_LOG = path.join(__dirname, 'output', 'stream-import.log');
+
+function logLine(message) {
+  console.log(message);
+  fs.appendFileSync(PROGRESS_LOG, `${message}\n`);
+}
 
 function maskUrl(url) {
   return url.replace(/:([^:@/]+)@/, ':***@');
 }
 
-async function iterateElements(source, vsetKey, batchSize) {
+async function iterateElements(source, vsetKey, batchSize, rangeStart = '-') {
   const all = [];
-  let start = '-';
+  let start = rangeStart;
 
   while (true) {
     const page = await source.sendCommand([
@@ -74,6 +82,46 @@ async function iterateElements(source, vsetKey, batchSize) {
   }
 
   return all;
+}
+
+/** Walk source lex order and return exclusive start after skipCount elements. */
+async function getResumeStart(source, vsetKey, skipCount, batchSize) {
+  if (skipCount <= 0) return '-';
+
+  let remaining = skipCount;
+  let start = '-';
+  let lastId = null;
+
+  while (remaining > 0) {
+    const pageSize = Math.min(remaining, batchSize);
+    const page = await source.sendCommand([
+      'VRANGE',
+      vsetKey,
+      start,
+      '+',
+      String(pageSize),
+    ]);
+    if (!Array.isArray(page) || page.length === 0) break;
+
+    lastId = String(page[page.length - 1]);
+    remaining -= page.length;
+    if (page.length < pageSize) break;
+    start = `(${lastId}`;
+  }
+
+  return lastId ? `(${lastId}` : '-';
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isConnectionError(err) {
+  const message = err instanceof Error ? err.message : String(err);
+  const code = err && typeof err === 'object' && 'code' in err ? String(err.code) : '';
+  return /ECONNRESET|ECONNREFUSED|ETIMEDOUT|Socket closed|EPIPE/i.test(
+    `${code} ${message}`,
+  );
 }
 
 async function copyElement(source, target, vsetKey, elementId) {
@@ -101,26 +149,69 @@ async function copyElement(source, target, vsetKey, elementId) {
   ]);
 }
 
+async function createTargetClient() {
+  const target = createClient({ url: TARGET_URL });
+  target.on('error', (err) => {
+    logLine(`   target client error: ${err.message}`);
+  });
+  await target.connect();
+  return target;
+}
+
+async function copyWithRetry(source, getTarget, reconnectTarget, vsetKey, elementId) {
+  let lastError;
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    try {
+      await copyElement(source, getTarget(), vsetKey, elementId);
+      return;
+    } catch (err) {
+      lastError = err;
+      if (!isConnectionError(err) || attempt === 5) throw err;
+      logLine(`   reconnect attempt ${attempt} after: ${err.message}`);
+      await reconnectTarget();
+      await sleep(1000 * attempt);
+    }
+  }
+  throw lastError;
+}
+
 async function main() {
+  if (FLUSH && RESUME) {
+    console.error('Use either --flush or --resume, not both.');
+    process.exit(1);
+  }
+
   console.log('Stream vset:faces from local dump to target Redis');
   console.log(`   Source:  ${SOURCE_URL}`);
   console.log(`   Target:  ${maskUrl(TARGET_URL)}`);
   console.log(`   VSet:    ${VSET}`);
   console.log(`   Batch:   ${BATCH}`);
   console.log(`   Flush:   ${FLUSH}`);
+  console.log(`   Resume:  ${RESUME}`);
   console.log(`   Dry run: ${DRY_RUN}`);
   if (LIMIT !== null) console.log(`   Limit:   ${LIMIT}`);
   console.log('');
 
   const source = createClient({ url: SOURCE_URL });
+  source.on('error', (err) => {
+    logLine(`   source client error: ${err.message}`);
+  });
   await source.connect();
   console.log('   Connected to source');
 
   if (!DRY_RUN) {
-    const target = createClient({ url: TARGET_URL });
-    await target.connect();
-    console.log('   Connected to target');
-    await runCopy(source, target);
+    let target = await createTargetClient();
+    logLine('   Connected to target');
+    await runCopy(
+      source,
+      () => target,
+      async () => {
+        try {
+          await target.quit();
+        } catch {}
+        target = await createTargetClient();
+      },
+    );
     return;
   }
 
@@ -131,18 +222,29 @@ async function main() {
   await source.quit();
 }
 
-async function runCopy(source, target) {
+async function runCopy(source, getTarget, reconnectTarget) {
   const vcard = await source.sendCommand(['VCARD', VSET]);
-  console.log(`   Source VCARD: ${vcard}\n`);
+  logLine(`   Source VCARD: ${vcard}`);
 
   if (FLUSH) {
-    await target.sendCommand(['DEL', VSET]);
-    console.log(`   Flushed target key: ${VSET}\n`);
+    await getTarget().sendCommand(['DEL', VSET]);
+    logLine(`   Flushed target key: ${VSET}`);
   }
 
-  console.log('   Scanning element IDs…');
-  const elementIds = await iterateElements(source, VSET, BATCH);
-  console.log(`   Found ${elementIds.length} elements to copy\n`);
+  logLine('   Scanning element IDs…');
+  let rangeStart = '-';
+  if (RESUME) {
+    const targetVcardBefore = Number(await getTarget().sendCommand(['VCARD', VSET]));
+    logLine(`   Target VCARD before: ${targetVcardBefore}`);
+    if (targetVcardBefore > 0) {
+      logLine('   Finding resume point in source lex order…');
+      rangeStart = await getResumeStart(source, VSET, targetVcardBefore, BATCH);
+      logLine(`   Resuming after: ${rangeStart}`);
+    }
+  }
+
+  const elementIds = await iterateElements(source, VSET, BATCH, rangeStart);
+  logLine(`   Found ${elementIds.length} elements to copy`);
 
   fs.mkdirSync(path.dirname(ERROR_LOG), { recursive: true });
   if (fs.existsSync(ERROR_LOG)) fs.unlinkSync(ERROR_LOG);
@@ -154,20 +256,20 @@ async function runCopy(source, target) {
   for (let i = 0; i < elementIds.length; i++) {
     const id = elementIds[i];
     try {
-      await copyElement(source, target, VSET, id);
+      await copyWithRetry(source, getTarget, reconnectTarget, VSET, id);
       ok++;
     } catch (err) {
       fail++;
       const message = err instanceof Error ? err.message : String(err);
       fs.appendFileSync(ERROR_LOG, `[${i + 1}] ${id}: ${message}\n`);
-      if (fail <= 5) console.warn(`  FAIL ${id}: ${message}`);
+      if (fail <= 5) logLine(`  FAIL ${id}: ${message}`);
     }
 
-    if ((i + 1) % 100 === 0 || i + 1 === elementIds.length) {
+    if ((i + 1) % 25 === 0 || i + 1 === elementIds.length) {
       const elapsed = (Date.now() - t0) / 1000;
       const rate = ok / Math.max(elapsed, 0.001);
-      process.stdout.write(
-        `\r  ${i + 1}/${elementIds.length} | ${ok} ok, ${fail} fail | ${rate.toFixed(1)}/s   `,
+      logLine(
+        `  ${i + 1}/${elementIds.length} | ${ok} ok, ${fail} fail | ${rate.toFixed(1)}/s`,
       );
     }
   }
@@ -175,24 +277,26 @@ async function runCopy(source, target) {
   const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
   let targetVcard = '?';
   try {
-    targetVcard = await target.sendCommand(['VCARD', VSET]);
+    targetVcard = await getTarget().sendCommand(['VCARD', VSET]);
   } catch {}
 
   await source.quit();
-  await target.quit();
+  try {
+    await getTarget().quit();
+  } catch {}
 
-  console.log(`\n\nDone in ${elapsed}s`);
-  console.log(`   Copied:       ${ok}`);
-  console.log(`   Failed:       ${fail}`);
-  console.log(`   Target VCARD: ${targetVcard}`);
+  logLine(`Done in ${elapsed}s`);
+  logLine(`   Copied:       ${ok}`);
+  logLine(`   Failed:       ${fail}`);
+  logLine(`   Target VCARD: ${targetVcard}`);
 
   if (fail > 0) {
-    console.log(`\n   Errors logged to: ${ERROR_LOG}`);
+    logLine(`   Errors logged to: ${ERROR_LOG}`);
     process.exit(1);
   }
 }
 
 main().catch((e) => {
-  console.error('Fatal error:', e);
+  logLine(`Fatal error: ${e instanceof Error ? e.stack ?? e.message : e}`);
   process.exit(1);
 });
