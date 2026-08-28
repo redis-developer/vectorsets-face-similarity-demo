@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config as dotenvConfig } from 'dotenv';
 import type { Dataset } from './types.js';
+import { DEFAULT_FRAME_ANCESTORS } from './utils/constants.js';
 
 function findEnvFile(): string | undefined {
   let dir = process.cwd();
@@ -19,6 +20,12 @@ dotenvConfig({ path: findEnvFile() });
 function getBasePath(): string {
   return (process.env.BASE_PATH || '').replace(/\/+$/, '');
 }
+
+const splitList = (value: string): string[] =>
+  value
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
 
 function buildDataset(bp: string): Dataset {
   return {
@@ -44,6 +51,10 @@ function getConfig() {
     PORT: process.env.PORT || '3000',
     UPLOAD_DIR: process.env.UPLOAD_DIR || 'uploads',
     UPLOAD_MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+    corsOrigins: splitList(process.env.CORS_ORIGINS || ''),
+    frameAncestors: splitList(
+      process.env.FRAME_ANCESTORS ?? DEFAULT_FRAME_ANCESTORS,
+    ),
 
     DATASET: dataset,
   };

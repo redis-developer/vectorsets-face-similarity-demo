@@ -1,10 +1,13 @@
 import express from 'express';
-import cors from 'cors';
 
 import { router } from './routes.js';
 import { logInfo, logError, getPureError } from './utils/logger.js';
 import { RedisWrapperST } from './utils/redis.js';
 import { getConfig } from './config.js';
+import {
+  applyBaseSecurity,
+  createApiRateLimiter,
+} from './http/security.middleware.js';
 import path from 'node:path';
 
 const config = getConfig();
@@ -15,9 +18,8 @@ const BASE_PATH = config.BASE_PATH;
 //#endregion
 
 const app = express();
-app.use(cors());
-
-app.use(express.json());
+applyBaseSecurity(app, config);
+app.use(`${BASE_PATH}/api`, createApiRateLimiter());
 
 app.use(`${BASE_PATH}/api`, router);
 
